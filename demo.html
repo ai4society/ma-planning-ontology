@@ -64,20 +64,21 @@
         
         .control-box h2 { font-size: 1.1rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 1rem; }
 
-        .file-input-wrapper { position: relative; }
+        .file-input-wrapper { position: relative; flex: 1; }
         #ttlInput { display: none; }
         .file-input-label {
-            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            display: flex; align-items: center; justify-content: center; gap: 0.35rem;
             background-color: var(--color-primary); color: white;
-            padding: 0.8rem 1rem; border-radius: 8px; text-align: center;
-            font-weight: 600; cursor: pointer; transition: all var(--transition-speed);
+            padding: 0.5rem 0.75rem; border-radius: 8px; text-align: center;
+            font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all var(--transition-speed);
         }
         .file-input-label:hover { background-color: var(--color-primary-dark); }
+        .data-source-buttons { display: flex; gap: 0.5rem; }
         
         #metadataDisplay { font-size: 0.9rem; line-height: 1.6; display: flex; flex-direction: column; gap: 0.5rem; }
         #metadataDisplay div { display: flex; justify-content: space-between; }
-        #metadataDisplay span:first-child { font-weight: 500; color: var(--color-text-dark); }
-        #metadataDisplay span:last-child { font-weight: 400; color: var(--color-text-muted); }
+        #metadataDisplay > div:not(.data-source-buttons) span:first-child { font-weight: 500; color: var(--color-text-dark); }
+        #metadataDisplay > div:not(.data-source-buttons) span:last-child { font-weight: 400; color: var(--color-text-muted); }
 
         #explanationPanelContainer.hidden { display: none; }
         #explanationPanel { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -184,6 +185,198 @@
             display: flex; align-items: center; justify-content: center; gap: 0.5rem;
             color: var(--color-text-muted); font-size: 0.9rem; padding: 1rem;
         }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.hidden {
+            display: none;
+        }
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(17, 24, 39, 0.7);
+            animation: fadeIn 0.3s ease-out;
+        }
+        .modal-content {
+            position: relative;
+            background: #FFFFFF;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+            padding: 2rem;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text-dark);
+            margin: 0;
+        }
+        .modal-header p {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            margin-top: 0.25rem;
+        }
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            line-height: 1;
+            transition: color var(--transition-speed);
+        }
+        .modal-close-btn:hover {
+            color: var(--color-primary);
+        }
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        @media (max-width: 700px) {
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .example-card {
+            background: #FFFFFF;
+            border: 2px solid var(--color-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        .example-card:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-primary);
+        }
+        .example-card:active {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(173, 76, 94, 0.2);
+        }
+        .example-preview {
+            width: 100%;
+            height: 150px;
+            background: var(--color-bg);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        .example-preview svg {
+            width: 150px;
+            height: 150px;
+        }
+        .example-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-text-dark);
+            margin: 0 0 0.25rem 0;
+        }
+        .example-info .subtitle {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            margin-bottom: 0.75rem;
+        }
+        .example-metadata {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .example-metadata .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: var(--color-bg);
+            color: var(--color-text-muted);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
+        .browse-examples-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            background-color: var(--color-bg);
+            color: var(--color-text-main);
+            border: 1px solid var(--color-border);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            flex: 1;
+        }
+        .browse-examples-btn:hover {
+            background-color: var(--color-panel-bg);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+        .accent-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            background-color: var(--color-primary);
+            color: #fff;
+            border: 1px solid var(--color-primary);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            flex: 1;
+        }
+        .accent-btn:hover {
+            background-color: var(--color-primary-dark);
+            border-color: var(--color-primary-dark);
+        }
+        .example-preview-loading {
+            color: var(--color-text-muted);
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
@@ -196,12 +389,18 @@
             <div id="dataSourceBox" class="control-box">
                 <h2>Data Source</h2>
                 <div id="upload-section">
-                    <div class="file-input-wrapper">
-                        <label for="ttlInput" class="file-input-label">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/></svg>
-                            <span>Upload Knowledge Graph</span>
-                        </label>
-                        <input type="file" id="ttlInput" accept=".ttl">
+                    <div class="data-source-buttons">
+                        <div class="file-input-wrapper">
+                            <label for="ttlInput" class="file-input-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/></svg>
+                                <span>Upload</span>
+                            </label>
+                            <input type="file" id="ttlInput" accept=".ttl">
+                        </div>
+                        <button id="browseExamplesBtn" class="browse-examples-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/></svg>
+                            <span>Examples</span>
+                        </button>
                     </div>
                 </div>
                 <div id="metadataDisplay" style="display: none;"></div>
@@ -253,6 +452,25 @@
         </main>
     </div>
 
+    <!-- Example Selection Modal -->
+    <div id="exampleModal" class="modal hidden">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2>Select an Example Problem</h2>
+                    <p>Choose a pre-configured MAPF scenario to explore</p>
+                </div>
+                <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="exampleGrid" class="example-grid">
+                    <!-- Example cards generated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const engine = new Comunica.QueryEngine();
@@ -279,13 +497,152 @@
                     prov: 'http://www.w3.org/ns/prov#'
                 }
             };
-    
+
+            const exampleLibrary = [
+                {
+                    id: 'example_1',
+                    title: 'Example 1',
+                    ttlPath: 'generated_kg/website_samples/robo5_test1.ttl',
+                    metadata: { agents: 5, conflicts: 'None', makespan: 13.0 },
+                    preview: {
+                        gridSize: [11, 11],
+                        obstacles: [[0,0],[0,9],[0,10],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[0,1],[1,8],[1,9],[1,10],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[0,2],[2,7],[2,8],[2,9],[2,10],[3,0],[3,1],[3,5],[3,8],[3,9],[3,10],[0,3],[4,0],[4,1],[4,5],[4,8],[4,9],[4,10],[5,0],[5,1],[5,8],[5,9],[0,4],[5,10],[6,0],[6,1],[6,8],[6,9],[6,10],[7,0],[7,1],[7,5],[7,8],[0,5],[7,9],[7,10],[8,0],[8,1],[8,5],[8,8],[8,9],[8,10],[9,0],[9,1],[0,6],[9,2],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[9,9],[9,10],[10,0],[0,7],[10,1],[10,2],[10,3],[10,4],[10,5],[10,6],[10,7],[10,8],[10,9],[10,10],[0,8]],
+                        agents: [{id:'Robot-1',start:[3,2],goal:[3,7]},{id:'Robot-2',start:[8,2],goal:[8,7]},{id:'Robot-3',start:[3,7],goal:[3,3]},{id:'Robot-4',start:[8,7],goal:[8,3]},{id:'Robot-5',start:[5,2],goal:[8,6]}]
+                    }
+                },
+                {
+                    id: 'example_2',
+                    title: 'Example 2',
+                    ttlPath: 'generated_kg/website_samples/robo5_test2.ttl',
+                    metadata: { agents: 5, conflicts: 'None', makespan: 11.0 },
+                    preview: {
+                        gridSize: [11, 11],
+                        obstacles: [[0,0],[0,9],[0,10],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[0,1],[1,8],[1,9],[1,10],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[0,2],[2,7],[2,8],[2,9],[2,10],[3,0],[3,1],[3,8],[3,9],[3,10],[4,0],[0,3],[4,1],[4,4],[4,5],[4,6],[4,8],[4,9],[4,10],[5,0],[5,1],[5,4],[0,4],[5,8],[5,9],[5,10],[6,0],[6,1],[6,8],[6,9],[6,10],[7,0],[7,1],[0,5],[7,3],[7,8],[7,9],[7,10],[8,0],[8,1],[8,5],[8,8],[8,9],[8,10],[0,6],[9,0],[9,1],[9,2],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[9,9],[0,7],[9,10],[10,0],[10,1],[10,2],[10,3],[10,4],[10,5],[10,6],[10,7],[10,8],[0,8],[10,9],[10,10]],
+                        agents: [{id:'Robot-1',start:[3,2],goal:[4,7]},{id:'Robot-2',start:[8,2],goal:[8,7]},{id:'Robot-3',start:[3,7],goal:[3,3]},{id:'Robot-4',start:[8,7],goal:[8,3]},{id:'Robot-5',start:[5,2],goal:[8,6]}]
+                    }
+                },
+                {
+                    id: 'example_3',
+                    title: 'Example 3',
+                    ttlPath: 'generated_kg/website_samples/robo5_test3.ttl',
+                    metadata: { agents: 5, conflicts: 'None', makespan: 15.0 },
+                    preview: {
+                        gridSize: [11, 11],
+                        obstacles: [[0,0],[0,9],[0,10],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[0,1],[1,8],[1,9],[1,10],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[0,2],[2,7],[2,8],[2,9],[2,10],[3,0],[3,1],[3,8],[3,9],[3,10],[4,0],[0,3],[4,1],[4,3],[4,4],[4,6],[4,7],[4,8],[4,9],[4,10],[5,0],[5,1],[0,4],[5,8],[5,9],[5,10],[6,0],[6,1],[6,2],[6,3],[6,4],[6,6],[6,7],[0,5],[6,8],[6,9],[6,10],[7,0],[7,1],[7,8],[7,9],[7,10],[8,0],[8,1],[0,6],[8,8],[8,9],[8,10],[9,0],[9,1],[9,2],[9,3],[9,4],[9,5],[9,6],[0,7],[9,7],[9,8],[9,9],[9,10],[10,0],[10,1],[10,2],[10,3],[10,4],[10,5],[0,8],[10,6],[10,7],[10,8],[10,9],[10,10]],
+                        agents: [{id:'Robot-1',start:[3,2],goal:[5,7]},{id:'Robot-2',start:[5,7],goal:[8,2]},{id:'Robot-3',start:[8,7],goal:[3,2]},{id:'Robot-4',start:[3,5],goal:[8,5]},{id:'Robot-5',start:[5,2],goal:[3,7]}]
+                    }
+                },
+                {
+                    id: 'example_4',
+                    title: 'Example 4',
+                    ttlPath: 'generated_kg/website_samples/robo5_test4.ttl',
+                    metadata: { agents: 5, conflicts: 'None', makespan: 19.0 },
+                    preview: {
+                        gridSize: [11, 11],
+                        obstacles: [[0,0],[0,9],[0,10],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[0,1],[1,8],[1,9],[1,10],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[0,2],[2,7],[2,8],[2,9],[2,10],[3,0],[3,1],[3,4],[3,5],[3,6],[3,8],[0,3],[3,9],[3,10],[4,0],[4,1],[4,4],[4,5],[4,6],[4,8],[4,9],[4,10],[0,4],[5,0],[5,1],[5,8],[5,9],[5,10],[6,0],[6,1],[6,4],[6,5],[6,6],[0,5],[6,8],[6,9],[6,10],[7,0],[7,1],[7,4],[7,5],[7,6],[7,8],[7,9],[0,6],[7,10],[8,0],[8,1],[8,8],[8,9],[8,10],[9,0],[9,1],[9,2],[9,3],[0,7],[9,4],[9,5],[9,6],[9,7],[9,8],[9,9],[9,10],[10,0],[10,1],[10,2],[0,8],[10,3],[10,4],[10,5],[10,6],[10,7],[10,8],[10,9],[10,10]],
+                        agents: [{id:'Robot-1',start:[3,2],goal:[3,7]},{id:'Robot-2',start:[4,7],goal:[4,2]},{id:'Robot-3',start:[7,2],goal:[7,7]},{id:'Robot-4',start:[8,7],goal:[8,2]},{id:'Robot-5',start:[5,2],goal:[5,7]}]
+                    }
+                },
+                {
+                    id: 'example_5',
+                    title: 'Example 5',
+                    ttlPath: 'generated_kg/website_samples/robo5_test5.ttl',
+                    metadata: { agents: 5, conflicts: 'None', makespan: 13.0 },
+                    preview: {
+                        gridSize: [11, 11],
+                        obstacles: [[0,0],[0,9],[0,10],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[0,1],[1,8],[1,9],[1,10],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[0,2],[2,7],[2,8],[2,9],[2,10],[3,0],[3,1],[3,8],[3,9],[3,10],[4,0],[0,3],[4,1],[4,3],[4,5],[4,8],[4,9],[4,10],[5,0],[5,1],[5,5],[5,8],[0,4],[5,9],[5,10],[6,0],[6,1],[6,3],[6,8],[6,9],[6,10],[7,0],[7,1],[0,5],[7,3],[7,5],[7,8],[7,9],[7,10],[8,0],[8,1],[8,8],[8,9],[8,10],[0,6],[9,0],[9,1],[9,2],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[9,9],[0,7],[9,10],[10,0],[10,1],[10,2],[10,3],[10,4],[10,5],[10,6],[10,7],[10,8],[0,8],[10,9],[10,10]],
+                        agents: [{id:'Robot-1',start:[3,2],goal:[8,7]},{id:'Robot-2',start:[3,7],goal:[8,2]},{id:'Robot-3',start:[4,2],goal:[7,7]},{id:'Robot-4',start:[5,4],goal:[6,5]},{id:'Robot-5',start:[8,3],goal:[3,6]}]
+                    }
+                }
+            ];
+
+            const exampleRenderer = {
+                renderPreview(example, svgElement) {
+                    const svg = d3.select(svgElement);
+                    svg.selectAll('*').remove();
+
+                    const preview = example.preview;
+                    if (!preview) return;
+
+                    const size = 150;
+                    const padding = 8;
+                    const [cols, rows] = preview.gridSize;
+                    const cellSize = (size - padding * 2) / Math.max(cols, rows);
+                    const offsetX = (size - cols * cellSize) / 2;
+                    const offsetY = (size - rows * cellSize) / 2;
+
+                    const g = svg.append('g').attr('transform', `translate(${offsetX}, ${offsetY})`);
+
+                    // Grid background
+                    g.append('rect')
+                        .attr('x', 0).attr('y', 0)
+                        .attr('width', cols * cellSize).attr('height', rows * cellSize)
+                        .attr('fill', '#FFFFFF').attr('stroke', '#E5E7EB').attr('stroke-width', 1);
+
+                    // Grid lines
+                    for (let i = 1; i < cols; i++) {
+                        g.append('line')
+                            .attr('x1', i * cellSize).attr('y1', 0)
+                            .attr('x2', i * cellSize).attr('y2', rows * cellSize)
+                            .attr('stroke', '#E5E7EB').attr('stroke-width', 0.5);
+                    }
+                    for (let j = 1; j < rows; j++) {
+                        g.append('line')
+                            .attr('x1', 0).attr('y1', j * cellSize)
+                            .attr('x2', cols * cellSize).attr('y2', j * cellSize)
+                            .attr('stroke', '#E5E7EB').attr('stroke-width', 0.5);
+                    }
+
+                    // Obstacles
+                    preview.obstacles.forEach(obs => {
+                        const [x, y] = obs;
+                        g.append('rect')
+                            .attr('x', y * cellSize + 1).attr('y', x * cellSize + 1)
+                            .attr('width', cellSize - 2).attr('height', cellSize - 2)
+                            .attr('fill', '#D1D5DB').attr('rx', 2);
+                    });
+
+                    // Agent goals (dashed outlines)
+                    preview.agents.forEach((agent) => {
+                        const [gx, gy] = agent.goal;
+                        const color = config.agentColors(agent.id);
+                        g.append('rect')
+                            .attr('x', gy * cellSize + 2).attr('y', gx * cellSize + 2)
+                            .attr('width', cellSize - 4).attr('height', cellSize - 4)
+                            .attr('fill', 'none').attr('stroke', color)
+                            .attr('stroke-width', 1.5).attr('stroke-dasharray', '2,2').attr('rx', 2);
+                    });
+
+                    // Agent start positions
+                    preview.agents.forEach((agent) => {
+                        const [sx, sy] = agent.start;
+                        const color = config.agentColors(agent.id);
+                        const agentNum = agent.id.split('-').pop();
+
+                        g.append('rect')
+                            .attr('x', sy * cellSize + 2).attr('y', sx * cellSize + 2)
+                            .attr('width', cellSize - 4).attr('height', cellSize - 4)
+                            .attr('fill', color).attr('rx', 2);
+
+                        if (cellSize > 10) {
+                            g.append('text')
+                                .attr('x', sy * cellSize + cellSize / 2)
+                                .attr('y', sx * cellSize + cellSize / 2)
+                                .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+                                .attr('fill', 'white').attr('font-size', `${Math.max(6, cellSize * 0.5)}px`)
+                                .attr('font-weight', '700').attr('font-family', 'Inter, sans-serif')
+                                .text(agentNum);
+                        }
+                    });
+                }
+            };
+
             const state = {
                 ttlContent: null,
                 fileName: null,
                 rdfStore: null,
                 gridData: null,
-                lastInteraction: null, 
+                lastInteraction: null,
                 animationInterval: null,
             };
             
@@ -494,11 +851,11 @@
             explanationEngine.generateExplanation = async function(question, queryKey, results) { let content = ''; const followUps = []; const params = state.lastInteraction.params; if (!results || results.length === 0) { content = `<p>I couldn't find any specific details for that query.</p>`; ui.highlightConflicts([]); } else { const conflictIdsToHighlight = results.flatMap(r => r.conflict ? r.conflict.split(',') : []).filter(Boolean); if (state.lastInteraction.conflictURI) { conflictIdsToHighlight.push(state.lastInteraction.conflictURI); } if (conflictIdsToHighlight.length > 0) { ui.highlightConflicts(conflictIdsToHighlight); } else { ui.highlightConflicts([]); } switch (queryKey) { case 'getAgentFinalPlan': { const agentId = params.agentId; const agentName = ui.getAgentDisplayName(agentId); const uniqueSteps = Array.from(d3.group(results, d => d.timestamp).values()).map(group => group[0]); const cost = uniqueSteps[0].cost; const path = uniqueSteps.map(r => `(${r.x},${r.y})`); const trajectoryString = path.join(' → '); const summary = ui.summarizeTrajectory(path); content = `<p>The final plan for <strong>${agentName}</strong> has a cost of <strong>${cost}</strong>.</p> <p><strong>Summary:</strong> ${summary}</p> <p><strong>Full Path:</strong></p> <p style="font-size:0.8rem; word-break:break-all;">${trajectoryString}</p>`; followUps.push({ text: `What conflicts was ${agentName} in?`, queryKey: 'getAllAgentConflicts', params: { agentId } }); if (path.some((cell, i) => i > 0 && cell === path[i-1])) { followUps.push({ text: `Why did ${agentName} have to wait?`, queryKey: 'explainAgentWait', params: { agentId } }); } break; } case 'getAllAgentConflicts': { const agentNameForConflicts = ui.getAgentDisplayName(params.agentId); content = `<p><strong>${agentNameForConflicts}</strong> was involved in these conflicts (highlighted on grid):</p>`; const processedResults = results.map(r => ({ time: r.timestamp, type: r.type, location: r.locations, with: r.involvedAgents.split(',').map(ui.getAgentDisplayName).join(', ') })); content += ui.createResultsTable(processedResults); results.forEach(conflict => { followUps.push({ text: `How was the conflict at ${conflict.locations} resolved?`, type: 'follow-up', queryKey: 'explainConflictResolutionAndPlanChange', params: { conflictURI: conflict.conflict } }); }); break; } case 'getAllConflictsAtLocation': { content = `<p>The following conflicts occurred at this location (highlighted on grid):</p>`; const processedResults = results.map(r => ({ time: r.timestamp, type: r.type, agents: r.agents.split(',').map(ui.getAgentDisplayName).join(', ') })); content += ui.createResultsTable(processedResults); results.forEach(conflict => { followUps.push({ text: `How was the conflict at T=${r.timestamp} resolved?`, type: 'follow-up', queryKey: 'explainConflictResolutionAndPlanChange', params: { conflictURI: conflict.conflict } }); }); break; } case 'explainConflictResolutionAndPlanChange': { const res = results[0]; const pathData = await app.executeSparqlQuery(sparqlQueries.getPathForPlan({ planURI: res.resolvedPlan })); const newPathString = pathData.map(p => `(${p.x},${p.y})`).join(' → '); content = `<p>A conflict occurred at location <strong>${res.locations}</strong>.</p> <p>To resolve the conflict with <strong>${ui.getAgentDisplayName(res.otherAgentName)}</strong>, <strong>${ui.getAgentDisplayName(res.replanningAgentName)}</strong> changed its plan.</p> <p style="font-size:0.9em; word-break:break-all; margin-top: 0.5rem;"><strong>Show new plan:</strong> ${newPathString}</p> <p>This changed the plan cost from <strong>${res.originalCost}</strong> to <strong>${res.newCost}</strong>.</p> <p><strong>Rationale:</strong> Using a <strong>${res.alertType || 'default'}</strong> strategy, ${res.rationale}</p>`; break; } case 'explainAgentWait': { const waits = results.filter(r => r.endTS === r.startTS + 1); if (!waits || waits.length === 0) { content = `<p><strong>${ui.getAgentDisplayName(params.agentId)}</strong> did not have any wait states in its final plan.</p>`; } else { const totalWait = waits.length; const waitInfo = waits[0]; const conflictTime = waitInfo.conflictTS; const waitingAgentName = ui.getAgentDisplayName(params.agentId); content = `<p><strong>${waitingAgentName}</strong> had to wait for a total of <strong>${totalWait}</strong> second(s) in its final plan.</p> <p>This was necessary to avoid a planned conflict with <strong>${ui.getAgentDisplayName(waitInfo.otherAgentName)}</strong> that would have occurred at (${waitInfo.x},${waitInfo.y}) at T=${conflictTime}.</p>`; } break; } case 'getPlanMakespan': { const makespan = results[0].makespan; const costData = await app.executeSparqlQuery(sparqlQueries.getCostByAgent()); const replanData = await app.executeSparqlQuery(sparqlQueries.countReplans()); const sumOfCosts = costData.reduce((sum, row) => sum + parseFloat(row.cost), 0); const replanCount = replanData.length > 0 ? replanData[0].replanCount : 0; content = `<p>Here is a summary of the final joint plan:</p> <p>The overall <strong>makespan</strong> is <strong>${makespan}</strong>.</p> <p>The <strong>sum of individual plan costs</strong> is <strong>${sumOfCosts.toFixed(2)}</strong>.</p> <p>A total of <strong>${replanCount} replans</strong> were required.</p>`; break; } case 'getCostByAgent': { content = `<p>The final plan cost for each agent is as follows:</p>`; const costResults = results.map(r => ({ Agent: ui.getAgentDisplayName(r.agentName), Cost: parseFloat(r.cost).toFixed(2) })); content += ui.createResultsTable(costResults); break; } case 'compareOriginalResolved': { const agentName = ui.getAgentDisplayName(params.agentId); const originalPath = results.filter(r => r.phase === 'Original').map(r => `(${r.x},${r.y})`); const resolvedPath = results.filter(r => r.phase === 'Resolved').map(r => `(${r.x},${r.y})`); const originalCost = parseFloat(results[0].originalCost).toFixed(2); const newCost = parseFloat(results[0].newCost).toFixed(2); const costIncrease = (newCost - originalCost).toFixed(2); content = `<p>Comparison for <strong>${agentName}</strong>:</p> <p>The <strong>original plan</strong> cost was <strong>${originalCost}</strong>.</p> <p>The <strong>new resolved plan</strong> cost is <strong>${newCost}</strong> (increase of <strong>${costIncrease}</strong>).</p> <hr style="margin: 1rem 0; border-color: var(--color-border);"> <p><strong>Original Path:</strong> ${originalPath.join(' → ')}</p> <p><strong>Resolved Path:</strong> ${resolvedPath.join(' → ')}</p>`; break; } case 'findMostCongestedLocations': { content = `<p>The most congested locations are:</p>`; const congestionResults = results.map(r => ({ Location: `(${r.x},${r.y})`, 'Conflict Count': r.conflictCount })); content += ui.createResultsTable(congestionResults); break; } case 'getAgentResolutionHistory': { const agentName = ui.getAgentDisplayName(params.agentId); let explanationHtml = `<p>Here is the step-by-step resolution history for <strong>${agentName}</strong>:</p>`; const allPathData = await app.executeSparqlQuery(sparqlQueries.getPathsForAgentPlans(params)); const pathsByPlan = d3.group(allPathData, d => d.plan); results.sort((a, b) => { if (a.planType === 'Original Plan') return -1; if (b.planType === 'Original Plan') return 1; return a.timestamp - b.timestamp; }); results.forEach((step, index) => { const pathString = (pathsByPlan.get(step.plan) || []).map(p => `(${p.x},${p.y})`).join(' → '); explanationHtml += `<hr style="margin: 0.75rem 0; border-color: var(--color-border);">`; if (step.planType === 'Original Plan') { explanationHtml += `<p><strong>Step 0: Initial Plan</strong><br> The first plan was generated with an initial cost of <strong>${parseFloat(step.planCost).toFixed(2)}</strong>.</p>`; if (pathString) { explanationHtml += `<p style="font-size:0.8rem; word-break:break-all; margin-top: 0.5rem;"><strong>Path:</strong> ${pathString}</p>`; } } else { const prevStep = results[index - 1]; const prevPathId = prevStep.plan; const prevPathString = (pathsByPlan.get(prevPathId) || []).map(p => `(${p.x},${p.y})`).join(' → '); const cost = parseFloat(step.planCost), prevCost = parseFloat(prevStep.planCost), change = cost - prevCost; let costChangeHtml = (change > 0) ? `an increase of <span style="color: #DC2626;">${change.toFixed(2)}</span>` : (change < 0) ? `a decrease of <span style="color: #10B981;">${Math.abs(change).toFixed(2)}</span>` : `no change`; const otherAgents = step.otherAgentName ? step.otherAgentName.split(',').map(name => ui.getAgentDisplayName(name.trim())).join(', ') : ''; const otherAgentDisplay = otherAgents ? ` with <strong>${otherAgents}</strong>` : ''; explanationHtml += `<p><strong>Step ${index}: Replanning Event</strong></p> <p><strong>Conflict Details:</strong> A conflict was detected${otherAgentDisplay} at time <strong>T=${step.timestamp}</strong> in location <strong>(${step.x},${step.y})</strong>.</p> <p><strong>Resulting Plan Change:</strong></p> <ul> <li>The plan cost changed from <strong>${prevCost.toFixed(2)}</strong> to <strong>${cost.toFixed(2)}</strong> (${costChangeHtml}).</li> <li><strong>Old Path:</strong> <span style="font-size:0.8rem; word-break:break-all;">${prevPathString}</span></li> <li><strong>New Path:</strong> <span style="font-size:0.8rem; word-break:break-all;">${pathString}</span></li> </ul> <p style="font-size:0.9em; color: var(--color-text-muted); margin-top: 0.25rem;"> <em>Planner Rationale: "${step.rationale}"</em></p>`; } }); content = explanationHtml; break; } default: { content = `<p>Here is the data I found:</p>`; content += ui.createResultsTable(results); } } } ui.renderChatResponse(question, content, queryKey, results, followUps); };
     
             const ui = {
-                dom: { explanationPanelContainer: document.getElementById('explanationPanelContainer'), explanationPanel: document.getElementById('explanationPanel'), explanationPanelTitle: document.getElementById('explanationPanelTitle'), agentSelectorContainer: document.getElementById('agentSelectorContainer'), agentSelect: document.getElementById('agent-select'), selectAgentBtn: document.getElementById('selectAgentBtn'), ttlInput: document.getElementById('ttlInput'), metadataDisplay: document.getElementById('metadataDisplay'), uploadSection: document.getElementById('upload-section'), simControlsContainer: document.getElementById('simControlsContainer'), playPauseBtn: document.getElementById('playPauseBtn'), timeSlider: document.getElementById('timeSlider'), timeLabel: document.getElementById('timeLabel'), sparqlQuery: document.getElementById('sparqlQuery'), sparqlResult: document.getElementById('sparqlResult'), runSparqlBtn: document.getElementById('runSparqlBtn'), gridSvg: d3.select('#gridSvg'), },
+                dom: { explanationPanelContainer: document.getElementById('explanationPanelContainer'), explanationPanel: document.getElementById('explanationPanel'), explanationPanelTitle: document.getElementById('explanationPanelTitle'), agentSelectorContainer: document.getElementById('agentSelectorContainer'), agentSelect: document.getElementById('agent-select'), selectAgentBtn: document.getElementById('selectAgentBtn'), ttlInput: document.getElementById('ttlInput'), metadataDisplay: document.getElementById('metadataDisplay'), uploadSection: document.getElementById('upload-section'), simControlsContainer: document.getElementById('simControlsContainer'), playPauseBtn: document.getElementById('playPauseBtn'), timeSlider: document.getElementById('timeSlider'), timeLabel: document.getElementById('timeLabel'), sparqlQuery: document.getElementById('sparqlQuery'), sparqlResult: document.getElementById('sparqlResult'), runSparqlBtn: document.getElementById('runSparqlBtn'), gridSvg: d3.select('#gridSvg'), exampleModal: document.getElementById('exampleModal'), exampleGrid: document.getElementById('exampleGrid'), modalOverlay: document.getElementById('modalOverlay'), modalCloseBtn: document.getElementById('modalCloseBtn'), browseExamplesBtn: document.getElementById('browseExamplesBtn'), },
                 getAgentDisplayName(agentId) { if (!agentId || typeof agentId !== 'string') return ''; const name = agentId.includes(':') ? agentId.split(':')[1] : agentId; const parts = name.split('-'); return `Agent ${parts[1] || name}`; },
                 summarizeTrajectory(path) { if (!path || path.length < 2) return 'The agent does not move.'; let summaryParts = []; let i = 0; while (i < path.length - 1) { let currentCell = path[i]; let waitCount = 0; while (i + 1 < path.length && path[i+1] === currentCell) { waitCount++; i++; } if (waitCount > 0) summaryParts.push(`<strong>waits</strong> at ${currentCell} for ${waitCount} step(s)`); if (i + 1 < path.length) summaryParts.push(`<strong>moves</strong> to ${path[i+1]}`); i++; } return `The agent starts at ${path[0]}, then ${summaryParts.join(', then ')}.`; },
                 switchView(viewName) { document.querySelectorAll('.view-switcher button').forEach(btn => btn.classList.toggle('active', btn.dataset.view === viewName)); document.querySelectorAll('.vis-container').forEach(container => container.classList.toggle('active', container.id === viewName)); const showSimControls = viewName === 'grid' && state.gridData; this.dom.simControlsContainer.classList.toggle('hidden', !showSimControls); if (viewName !== 'grid') this.highlightConflicts([]); },
-                displayMetadata() { const { fileName, gridData } = state; this.dom.uploadSection.style.display = 'none'; this.dom.metadataDisplay.innerHTML = `<div><span>File Name:</span> <span>${fileName}</span></div><div><span>Environment:</span> <span>${gridData.environmentId || 'N/A'}</span></div><div><span>Agent Count:</span> <span>${Object.keys(gridData.agents).length}</span></div><div><span>Obstacle Count:</span> <span>${gridData.obstacles.length}</span></div><div><span>Conflict Count:</span> <span>${gridData.conflicts.length}</span></div><button id="changeFileBtn" class="question-btn" style="margin-top: 1rem;">Change File</button>`; this.dom.metadataDisplay.style.display = 'flex'; document.getElementById('changeFileBtn').addEventListener('click', () => this.dom.ttlInput.click()); },
+                displayMetadata() { const { fileName, gridData } = state; this.dom.uploadSection.style.display = 'none'; this.dom.metadataDisplay.innerHTML = `<div><span>File Name:</span> <span>${fileName}</span></div><div><span>Environment:</span> <span>${gridData.environmentId || 'N/A'}</span></div><div><span>Agent Count:</span> <span>${Object.keys(gridData.agents).length}</span></div><div><span>Obstacle Count:</span> <span>${gridData.obstacles.length}</span></div><div><span>Conflict Count:</span> <span>${gridData.conflicts.length}</span></div><div class="data-source-buttons" style="margin-top: 1rem;"><button id="changeFileBtn" class="accent-btn"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 12H1.5a.5.5 0 0 1-.5-.5zm14-7a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 1 0 .708-.708L2.707 5H14.5a.5.5 0 0 0 .5-.5z"/></svg><span>Change File</span></button><button id="exampleBtn" class="browse-examples-btn"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/></svg><span>Examples</span></button></div>`; this.dom.metadataDisplay.style.display = 'flex'; document.getElementById('changeFileBtn').addEventListener('click', () => this.dom.ttlInput.click()); document.getElementById('exampleBtn').addEventListener('click', () => this.openExampleModal()); },
                 createResultsTable(results) { if (!results || !results.length) return ''; const headers = Object.keys(results[0]); const table = document.createElement('table'); table.innerHTML = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>`; const tbody = document.createElement('tbody'); results.forEach(row => { const tr = document.createElement('tr'); headers.forEach(h => { const value = row[h] ?? ''; const td = document.createElement('td'); td.textContent = value; td.title = value; tr.appendChild(td); }); tbody.appendChild(tr); }); table.appendChild(tbody); return `<div style="overflow-x: auto; padding-bottom: 0.5rem;">${table.outerHTML}</div>`; },
                 renderChatResponse(question, botContent, queryKey, rawResults, followUps = []) { this.dom.explanationPanel.innerHTML = ''; this.addGoBackButton(); const chatContainer = document.createElement('div'); chatContainer.className = 'chat-container'; const userMsg = document.createElement('div'); userMsg.className = 'chat-message user'; userMsg.textContent = question; const botMsg = document.createElement('div'); botMsg.className = 'chat-message bot'; botMsg.innerHTML = botContent; if (sparqlQueries[queryKey] && state.lastInteraction?.params) { const sparqlQuery = sparqlQueries[queryKey](state.lastInteraction.params); const viewBtn = document.createElement('button'); viewBtn.className = 'view-in-sparql-btn'; viewBtn.textContent = 'View in SPARQL Tab'; viewBtn.onclick = () => { let fullQueryForDisplay = ''; Object.entries(config.prefixes).forEach(([prefix, uri]) => { fullQueryForDisplay += `PREFIX ${prefix}: <${uri}>\n`; }); this.dom.sparqlQuery.value = fullQueryForDisplay + '\n' + sparqlQuery; this.dom.sparqlResult.innerHTML = this.createResultsTable(rawResults); this.switchView('sparql'); }; botMsg.appendChild(viewBtn); } chatContainer.appendChild(userMsg); chatContainer.appendChild(botMsg); this.dom.explanationPanel.appendChild(chatContainer); if (followUps.length > 0) { const followUpHeader = document.createElement('p'); followUpHeader.textContent = 'Further questions:'; followUpHeader.style.fontWeight = '500'; followUpHeader.style.marginTop = '1rem'; this.dom.explanationPanel.appendChild(followUpHeader); followUps.forEach(q => this.addQuestionButton(q)); } },
                 addGoBackButton() { const backBtn = document.createElement('button'); backBtn.className = 'question-btn go-back-btn'; backBtn.textContent = '← Go Back'; backBtn.dataset.type = 'back-to-initial'; this.dom.explanationPanel.appendChild(backBtn); },
@@ -507,7 +864,46 @@
                 drawGrid() { this.dom.gridSvg.selectAll('*').remove(); if (!state.gridData) return; const { width, height } = document.getElementById('grid').getBoundingClientRect(); const [cols, rows] = state.gridData.gridSize; const padding = 40; const cellSize = Math.max(10, Math.floor(Math.min((width - padding) / cols, (height - padding) / rows))); const gridWidth = cols * cellSize; const gridHeight = rows * cellSize; const g = this.dom.gridSvg.append('g').attr('transform', `translate(${(width - gridWidth) / 2}, ${(height - gridHeight) / 2})`); const cellLayer = g.append('g').attr('id', 'cellLayer'); g.append('g').attr('id', 'conflictHighlightLayer'); const pathLayer = g.append('g').attr('id', 'pathLayer'); const goalLayer = g.append('g').attr('id', 'goalLayer'); const agentLayer = g.append('g').attr('id', 'agentLayer'); for(let i = 0; i < cols; i++) { g.append('text').attr('class', 'grid-label').attr('x', i * cellSize + cellSize/2).attr('y', -10).text(i); } for(let j = 0; j < rows; j++) { g.append('text').attr('class', 'grid-label').attr('x', -10).attr('y', j * cellSize + cellSize/2).text(j); } for (let j = 0; j < rows; j++) { for (let i = 0; i < cols; i++) { cellLayer.append('rect').attr('x', i * cellSize).attr('y', j * cellSize).attr('width', cellSize).attr('height', cellSize).attr('class', 'grid-cell').attr('id', `cell-${i}-${j}`).on('click', () => app.handleCellClick(i, j)); } } cellLayer.selectAll('.obstacle').data(state.gridData.obstacles).enter().append('rect').attr('class', 'obstacle').attr('x', d => d[0] * cellSize).attr('y', d => d[1] * cellSize).attr('width', cellSize).attr('height', cellSize).attr('rx', 4); const conflictLocations = new Set(state.gridData.conflicts.map(c => c.raw_location)); conflictLocations.forEach(locStr => { const [x, y] = locStr.split(','); d3.select(`#cell-${x}-${y}`).classed('conflict-zone', true); }); const line = d3.line().x(d => d.cell[0] * cellSize + cellSize / 2).y(d => d.cell[1] * cellSize + cellSize / 2); Object.entries(state.gridData.agents).forEach(([id, path]) => { const agentPathData = path.map(p => ({cell: p.cell})); pathLayer.append('path').attr('class', 'agent-path').attr('d', line(agentPathData)).style('stroke', config.agentColors(id)); if (path.length > 0) { const goal = path[path.length - 1].cell; goalLayer.append('rect').attr('class', 'agent-start-goal').attr('x', goal[0] * cellSize + 4).attr('y', goal[1] * cellSize + 4).attr('width', cellSize - 8).attr('height', cellSize - 8).attr('rx', 4).style('stroke', config.agentColors(id)); const agentNum = id.split('-').pop(); const start = path[0].cell; const agentGroup = agentLayer.append('g').attr('class', 'agent-group').attr('id', `agent-group-${id}`).attr('transform', `translate(${start[0] * cellSize}, ${start[1] * cellSize})`); agentGroup.append('rect').attr('class', 'agent').attr('width', cellSize - 4).attr('height', cellSize - 4).attr('x', 2).attr('y', 2).attr('rx', 4).style('fill', config.agentColors(id)); agentGroup.append('text').attr('class', 'agent-label').attr('x', cellSize / 2).attr('y', cellSize / 2).attr('font-size', `${Math.max(8, cellSize * 0.5)}px`).text(agentNum); } }); },
                 highlightConflicts(conflictIds) { const highlightLayer = this.dom.gridSvg.select('#conflictHighlightLayer'); highlightLayer.selectAll('*').remove(); if (!state.gridData || conflictIds.length === 0) return; const { width, height } = document.getElementById('grid').getBoundingClientRect(); const [cols, rows] = state.gridData.gridSize; const padding = 40; const cellSize = Math.max(10, Math.floor(Math.min((width - padding) / cols, (height - padding) / rows))); const conflictsToHighlight = state.gridData.conflicts.filter(c => conflictIds.includes(c.id)); conflictsToHighlight.forEach(c => { const [x, y] = c.raw_location.split(','); highlightLayer.append('rect').attr('class', 'dynamic-conflict-highlight vertex').attr('x', x * cellSize + 2).attr('y', y * cellSize + 2).attr('width', cellSize - 4).attr('height', cellSize - 4).attr('rx', 4); }); },
                 updateSimulation(time) { this.dom.timeSlider.value = time; this.dom.timeLabel.textContent = `T=${time}`; if (!state.gridData) return; const { width, height } = document.getElementById('grid').getBoundingClientRect(); const [cols, rows] = state.gridData.gridSize; const padding = 40; const cellSize = Math.max(10, Math.floor(Math.min((width - padding) / cols, (height - padding) / rows))); Object.entries(state.gridData.agents).forEach(([id, path]) => { const agentGroup = d3.select(`#agent-group-${id}`); if (agentGroup.empty() || path.length === 0) return; let currentPos = path[0].cell; for(const step of path) { if (step.time <= time) { currentPos = step.cell; } else { break; } } const goalPos = path[path.length - 1].cell; const atGoal = (currentPos[0] === goalPos[0] && currentPos[1] === goalPos[1]); agentGroup.transition().duration(200).attr('transform', `translate(${currentPos[0] * cellSize}, ${currentPos[1] * cellSize})`).style('opacity', atGoal ? 0.5 : 1.0); }); },
-                toggleAnimation() { if (state.animationInterval) { clearInterval(state.animationInterval); state.animationInterval = null; this.dom.playPauseBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/></svg>`; } else { this.dom.playPauseBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/></svg>`; state.animationInterval = setInterval(() => { let currentTime = parseInt(this.dom.timeSlider.value); currentTime = (currentTime >= parseInt(this.dom.timeSlider.max)) ? 0 : currentTime + 1; this.updateSimulation(currentTime); }, config.animationSpeed); } }
+                toggleAnimation() { if (state.animationInterval) { clearInterval(state.animationInterval); state.animationInterval = null; this.dom.playPauseBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/></svg>`; } else { this.dom.playPauseBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/></svg>`; state.animationInterval = setInterval(() => { let currentTime = parseInt(this.dom.timeSlider.value); currentTime = (currentTime >= parseInt(this.dom.timeSlider.max)) ? 0 : currentTime + 1; this.updateSimulation(currentTime); }, config.animationSpeed); } },
+
+                openExampleModal() {
+                    this.dom.exampleModal.classList.remove('hidden');
+                    this.dom.exampleGrid.innerHTML = '';
+
+                    exampleLibrary.forEach(example => {
+                        const card = document.createElement('div');
+                        card.className = 'example-card';
+                        card.dataset.exampleId = example.id;
+
+                        card.innerHTML = `
+                            <div class="example-preview">
+                                <svg viewBox="0 0 150 150"></svg>
+                            </div>
+                            <div class="example-info">
+                                <h3>${example.title}</h3>
+                                <div class="example-metadata">
+                                    <span class="badge">Agents: ${example.metadata.agents}</span>
+                                    <span class="badge">Conflicts: ${example.metadata.conflicts}</span>
+                                    <span class="badge">Makespan: ${example.metadata.makespan}</span>
+                                </div>
+                            </div>
+                        `;
+
+                        card.addEventListener('click', () => app.selectExample(example));
+                        this.dom.exampleGrid.appendChild(card);
+
+                        // Render preview asynchronously
+                        const svgElement = card.querySelector('svg');
+                        exampleRenderer.renderPreview(example, svgElement);
+                    });
+
+                    document.body.style.overflow = 'hidden';
+                },
+
+                closeExampleModal() {
+                    this.dom.exampleModal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
             };
         
             const app = {
@@ -537,13 +933,13 @@
                     }
                 },
         
-                async handleTtlUpload(event) {
-                    const file = event.target.files[0]; if (!file) return;
+                async loadKnowledgeGraph(ttlContent, fileName) {
                     try {
                         ui.dom.metadataDisplay.innerHTML = '<div class="loading">Loading and parsing TTL file...</div>';
                         ui.dom.metadataDisplay.style.display = 'block';
-                        state.ttlContent = await file.text();
-                        state.fileName = file.name;
+                        ui.dom.uploadSection.style.display = 'none';
+                        state.ttlContent = ttlContent;
+                        state.fileName = fileName;
                         if (!state.ttlContent) throw new Error('File is empty or could not be read');
                         state.rdfStore = await rdfProcessor.parseAndStore(state.ttlContent);
                         state.gridData = await rdfProcessor.extractGridData(state.rdfStore);
@@ -564,6 +960,27 @@
                         ui.dom.uploadSection.style.display = 'block';
                         state.gridData = null; state.rdfStore = null;
                         ui.drawGrid();
+                        throw error;
+                    }
+                },
+
+                async handleTtlUpload(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    const ttlContent = await file.text();
+                    await this.loadKnowledgeGraph(ttlContent, file.name);
+                },
+
+                async selectExample(example) {
+                    ui.closeExampleModal();
+                    try {
+                        const response = await fetch(example.ttlPath);
+                        if (!response.ok) throw new Error(`Failed to load example: ${example.title}`);
+                        const ttlContent = await response.text();
+                        await this.loadKnowledgeGraph(ttlContent, example.title);
+                    } catch (error) {
+                        console.error('Error loading example:', error);
+                        alert(`Error loading example: ${error.message}`);
                     }
                 },
                 
@@ -654,6 +1071,17 @@
                     ui.dom.selectAgentBtn.addEventListener('click', (e) => { e.stopPropagation(); this.showAgentSpecificView(); });
                     ui.dom.playPauseBtn.addEventListener('click', () => ui.toggleAnimation());
                     ui.dom.timeSlider.addEventListener('input', (e) => ui.updateSimulation(parseInt(e.target.value)));
+
+                    // Modal event listeners
+                    ui.dom.browseExamplesBtn.addEventListener('click', () => ui.openExampleModal());
+                    ui.dom.modalCloseBtn.addEventListener('click', () => ui.closeExampleModal());
+                    ui.dom.modalOverlay.addEventListener('click', () => ui.closeExampleModal());
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape' && !ui.dom.exampleModal.classList.contains('hidden')) {
+                            ui.closeExampleModal();
+                        }
+                    });
+
                     new ResizeObserver(() => ui.drawGrid()).observe(document.getElementById('grid'));
                     ui.drawGrid();
                 }
