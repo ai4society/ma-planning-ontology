@@ -679,8 +679,8 @@
                         if (locQuad) {
                             const x = store.getQuads(locQuad.object, namedNode('http://example.org/ma#xCoordinate'), null)[0]?.object.value;
                             const y = store.getQuads(locQuad.object, namedNode('http://example.org/ma#yCoordinate'), null)[0]?.object.value;
-                            // FIX: Swap x and y here
-                            if (x && y) gridData.obstacles.push([parseInt(y), parseInt(x)]);
+                            // Store as [x, y] (column, row) to match grid coordinate system
+                            if (x && y) gridData.obstacles.push([parseInt(x), parseInt(y)]);
                         }
                     });
                     
@@ -719,8 +719,8 @@
                             const x = store.getQuads(locQuad.object, namedNode('http://example.org/ma#xCoordinate'), null)[0]?.object.value;
                             const y = store.getQuads(locQuad.object, namedNode('http://example.org/ma#yCoordinate'), null)[0]?.object.value;
                             const timeStamp = store.getQuads(timeQuad.object, namedNode('http://www.w3.org/2006/time#inXSDDateTimeStamp'), null)[0]?.object.value;
-                            // FIX: Swap x and y for raw_location string
-                            if (x && y && timeStamp) gridData.conflicts.push({ id: q.subject.value, time: parseTimestamp(timeStamp), raw_location: `${y},${x}`, type: 'vertex' });
+                            // Store raw_location as "x,y" (column,row) to match grid coordinate system
+                            if (x && y && timeStamp) gridData.conflicts.push({ id: q.subject.value, time: parseTimestamp(timeStamp), raw_location: `${x},${y}`, type: 'vertex' });
                         }
                     });
                     return gridData;
@@ -738,8 +738,8 @@
                             const locNode = firstQuad.object;
                             const x = store.getQuads(locNode, namedNode('http://example.org/ma#xCoordinate'), null)[0]?.object.value;
                             const y = store.getQuads(locNode, namedNode('http://example.org/ma#yCoordinate'), null)[0]?.object.value;
-                            // FIX: Swap x and y here
-                            if (x && y) path.push([parseInt(y), parseInt(x)]);
+                            // Store as [x, y] (column, row) to match grid coordinate system
+                            if (x && y) path.push([parseInt(x), parseInt(y)]);
                         }
                         currentNode = store.getQuads(currentNode, namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'), null)[0]?.object;
                     }
@@ -750,7 +750,7 @@
             const sparqlQueries = {
                 getAgentFinalPlan: ({ agentId }) => ` SELECT ?cost ?timestamp ?x ?y ?conflict WHERE { ma:FinalJointPlan ma:composedOfSubPlans ?plan . ?plan ma:belongsToAgent ma:${agentId} ; ma:hasPlanCost ?cost . ?plan ma:planData ?segment . ?segment ma:hasValidTime/time:hasBeginning/time:inXSDDateTimeStamp ?timestamp ; ma:hasPathSequence/rdf:rest*/rdf:first ?cellNode . ?cellNode ma:xCoordinate ?x ; ma:yCoordinate ?y . OPTIONAL { ?conflict ma:conflictLocation ?cellNode ; ma:involvesAgentsEvent ma:${agentId} ; ma:occursAtTime/time:inXSDDateTimeStamp ?timestamp . } } ORDER BY ASC(?timestamp) `,
                 
-                // --- FIX: Swapped ${x} and ${y} to their correct places ---
+                // Query conflicts at a specific grid location (x=column, y=row)
                 getAllConflictsAtLocation: ({ locationStr }) => {
                     const [x, y] = locationStr.split(',');
                     return `
