@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explainable MAPF Dashboard</title>
-    
+
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://unpkg.com/n3/browser/n3.min.js"></script>
 
@@ -12,7 +13,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
@@ -25,8 +27,10 @@
             --color-primary: #ad4c5e;
             --color-primary-dark: #cf5d72;
             --color-secondary: #10B981;
-            --color-conflict: #DC2626; /* Red-600 */
-            --color-conflict-highlight: rgba(239, 68, 68, 0.35); /* Red-500 with 35% opacity */
+            --color-conflict: #DC2626;
+            /* Red-600 */
+            --color-conflict-highlight: rgba(239, 68, 68, 0.35);
+            /* Red-500 with 35% opacity */
             --color-obstacle: #D1D5DB;
 
             --font-sans: 'Inter', sans-serif;
@@ -37,153 +41,476 @@
             --transition-speed: 0.3s ease-in-out;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-        html, body {
-            width: 100%; height: 100%; font-family: var(--font-sans);
-            background-color: var(--color-bg); color: var(--color-text-main);
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            font-family: var(--font-sans);
+            background-color: var(--color-bg);
+            color: var(--color-text-main);
             overflow: hidden;
         }
 
-        .app-container { display: grid; grid-template-columns: 400px 1fr; height: 100vh; }
+        .app-container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            height: 100vh;
+        }
 
         .control-panel {
-            background-color: var(--color-bg); padding: 1.5rem;
-            display: flex; flex-direction: column; gap: 1.5rem;
-            overflow-y: auto; border-right: 1px solid var(--color-border);
+            background-color: var(--color-bg);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow-y: auto;
+            border-right: 1px solid var(--color-border);
         }
 
-        .panel-header h1 { font-size: 1.75rem; font-weight: 700; color: var(--color-text-dark); line-height: 1.2; }
-        .panel-header p { font-size: 0.9rem; color: var(--color-text-muted); margin-top: 0.25rem; }
+        .panel-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--color-text-dark);
+            line-height: 1.2;
+        }
+
+        .panel-header p {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            margin-top: 0.25rem;
+        }
 
         .control-box {
-            background-color: var(--color-panel-bg); border-radius: var(--border-radius);
-            padding: 1.5rem; border: 1px solid var(--color-border);
-            box-shadow: var(--shadow-sm); transition: all var(--transition-speed);
+            background-color: var(--color-panel-bg);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-speed);
         }
-        
-        .control-box h2 { font-size: 1.1rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 1rem; }
 
-        .file-input-wrapper { position: relative; flex: 1; }
-        #ttlInput { display: none; }
+        .control-box h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            flex: 1;
+        }
+
+        #ttlInput {
+            display: none;
+        }
+
         .file-input-label {
-            display: flex; align-items: center; justify-content: center; gap: 0.35rem;
-            background-color: var(--color-primary); color: white;
-            padding: 0.5rem 0.75rem; border-radius: 8px; text-align: center;
-            font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all var(--transition-speed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-speed);
         }
-        .file-input-label:hover { background-color: var(--color-primary-dark); }
-        .data-source-buttons { display: flex; gap: 0.5rem; }
-        
-        #metadataDisplay { font-size: 0.9rem; line-height: 1.6; display: flex; flex-direction: column; gap: 0.5rem; }
-        #metadataDisplay div { display: flex; justify-content: space-between; }
-        #metadataDisplay > div:not(.data-source-buttons) span:first-child { font-weight: 500; color: var(--color-text-dark); }
-        #metadataDisplay > div:not(.data-source-buttons) span:last-child { font-weight: 400; color: var(--color-text-muted); }
 
-        #explanationPanelContainer.hidden { display: none; }
-        #explanationPanel { display: flex; flex-direction: column; gap: 0.75rem; }
+        .file-input-label:hover {
+            background-color: var(--color-primary-dark);
+        }
 
-        .question-btn { background-color: #F3F4F6; color: var(--color-text-main); border: 1px solid #E5E7EB; text-align: left; font-weight: 500; width: 100%; padding: 0.75rem 1rem; border-radius: 8px; cursor: pointer; }
-        .question-btn:hover { background-color: #E5E7EB; border-color: #D1D5DB; color: var(--color-text-dark); }
-        
+        .data-source-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        #metadataDisplay {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        #metadataDisplay div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #metadataDisplay>div:not(.data-source-buttons) span:first-child {
+            font-weight: 500;
+            color: var(--color-text-dark);
+        }
+
+        #metadataDisplay>div:not(.data-source-buttons) span:last-child {
+            font-weight: 400;
+            color: var(--color-text-muted);
+        }
+
+        #explanationPanelContainer.hidden {
+            display: none;
+        }
+
+        #explanationPanel {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .question-btn {
+            background-color: #F3F4F6;
+            color: var(--color-text-main);
+            border: 1px solid #E5E7EB;
+            text-align: left;
+            font-weight: 500;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .question-btn:hover {
+            background-color: #E5E7EB;
+            border-color: #D1D5DB;
+            color: var(--color-text-dark);
+        }
+
         .go-back-btn {
-            background-color: transparent; border: 1px solid var(--color-border); color: var(--color-text-muted); font-weight: 500; width: auto; padding: 0.5rem 1rem; margin-bottom: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;
+            background-color: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+            font-weight: 500;
+            width: auto;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .chat-container { display: flex; flex-direction: column; gap: 1rem; }
-        .chat-message { padding: 0.75rem 1rem; border-radius: var(--border-radius); line-height: 1.5; max-width: 95%; }
-        .chat-message.user { background-color: var(--color-primary); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
-        .chat-message.bot { background-color: #F3F4F6; color: var(--color-text-main); border-bottom-left-radius: 4px; align-self: flex-start; }
-        .chat-message p { margin-bottom: 0.5rem; }
-        .chat-message p:last-child { margin-bottom: 0; }
-        .chat-message table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 0.5rem; table-layout: fixed; }
-        .chat-message th, .chat-message td { padding: 0.4rem 0.6rem; text-align: left; border-bottom: 1px solid var(--color-border); word-wrap: break-word; }
-        .chat-message th { background-color: #F9FAFB; font-weight: 600; }
-        .chat-message ul { margin-left: 1.2rem; margin-top: 0.5rem; margin-bottom: 0.5rem; display: flex; flex-direction: column; gap: 0.4rem; }
-        .view-in-sparql-btn { background: none; border: none; font-size: 0.8rem; color: var(--color-primary); font-weight: 600; cursor: pointer; padding: 0.5rem 0 0 0; text-decoration: underline; }
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-message {
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            line-height: 1.5;
+            max-width: 95%;
+        }
+
+        .chat-message.user {
+            background-color: var(--color-primary);
+            color: white;
+            border-bottom-right-radius: 4px;
+            align-self: flex-end;
+        }
+
+        .chat-message.bot {
+            background-color: #F3F4F6;
+            color: var(--color-text-main);
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+        }
+
+        .chat-message p {
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-message p:last-child {
+            margin-bottom: 0;
+        }
+
+        .chat-message table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            table-layout: fixed;
+        }
+
+        .chat-message th,
+        .chat-message td {
+            padding: 0.4rem 0.6rem;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+            word-wrap: break-word;
+        }
+
+        .chat-message th {
+            background-color: #F9FAFB;
+            font-weight: 600;
+        }
+
+        .chat-message ul {
+            margin-left: 1.2rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .view-in-sparql-btn {
+            background: none;
+            border: none;
+            font-size: 0.8rem;
+            color: var(--color-primary);
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0.5rem 0 0 0;
+            text-decoration: underline;
+        }
 
         #agentSelectorContainer {
-            border: 1px solid var(--color-border); padding: 1rem; border-radius: var(--border-radius); margin-bottom: 1rem; background-color: var(--color-bg);
+            border: 1px solid var(--color-border);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            background-color: var(--color-bg);
         }
 
-        .main-content { display: grid; grid-template-rows: auto 1fr; padding: 1.5rem; gap: 1.5rem; overflow: hidden; }
-        .view-switcher { display: flex; gap: 0.5rem; background-color: var(--color-panel-bg); padding: 0.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); border: 1px solid var(--color-border); }
-        .view-switcher button { flex: 1; background-color: transparent; color: var(--color-text-muted); border: none; font-weight: 600; padding: 0.75rem; border-radius: 8px; cursor: pointer; }
-        .view-switcher button.active { background-color: var(--color-primary); color: white; box-shadow: var(--shadow-sm); }
-
-        .visualization-area { 
-            position: relative; 
-            background-color: var(--color-panel-bg); 
-            border-radius: var(--border-radius); 
-            box-shadow: var(--shadow-md); 
-            border: 1px solid var(--color-border); 
-            overflow: hidden; 
-            display: grid; 
-            grid-template-rows: 1fr auto; 
+        .main-content {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            padding: 1.5rem;
+            gap: 1.5rem;
+            overflow: hidden;
         }
-        .vis-container { 
-            width: 100%; 
-            height: 100%; 
-            display: none; 
+
+        .view-switcher {
+            display: flex;
+            gap: 0.5rem;
+            background-color: var(--color-panel-bg);
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        .view-switcher button {
+            flex: 1;
+            background-color: transparent;
+            color: var(--color-text-muted);
+            border: none;
+            font-weight: 600;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .view-switcher button.active {
+            background-color: var(--color-primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .visualization-area {
+            position: relative;
+            background-color: var(--color-panel-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+            overflow: hidden;
+            display: grid;
+            grid-template-rows: 1fr auto;
+        }
+
+        .vis-container {
+            width: 100%;
+            height: 100%;
+            display: none;
             overflow: hidden;
             grid-row: 1 / 2;
             grid-column: 1 / 2;
         }
-        .vis-container.active { display: flex; flex-direction: column; }
-        
-        #grid { padding: 1rem; flex-grow: 1; min-height: 0; }
-        #sparql { padding: 1.5rem; gap: 1rem; }
-        #sparqlQuery { font-family: var(--font-mono); font-size: 0.9rem; padding: 1rem; border-radius: var(--border-radius); border: 1px solid var(--color-border); height: 200px; resize: vertical; width: 100%; background-color: var(--color-bg); color: var(--color-text-dark); }
-        #sparqlResult { flex-grow: 1; overflow: auto; font-family: var(--font-mono); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: 1rem; }
-        #sparqlResult table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        #sparqlResult th, #sparqlResult td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-        #sparqlResult th { background-color: var(--color-panel-bg); font-weight: 600; }
 
-        #gridSvg { width: 100%; height: 100%; }
-        .grid-cell { stroke: var(--color-border); stroke-width: 1px; fill: var(--color-panel-bg); cursor: pointer; transition: all 0.2s; }
-        .grid-cell:hover { fill: #F3F4F6; }
+        .vis-container.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #grid {
+            padding: 1rem;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        #sparql {
+            padding: 1.5rem;
+            gap: 1rem;
+        }
+
+        #sparqlQuery {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--color-border);
+            height: 200px;
+            resize: vertical;
+            width: 100%;
+            background-color: var(--color-bg);
+            color: var(--color-text-dark);
+        }
+
+        #sparqlResult {
+            flex-grow: 1;
+            overflow: auto;
+            font-family: var(--font-mono);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+        }
+
+        #sparqlResult table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        #sparqlResult th,
+        #sparqlResult td {
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        #sparqlResult th {
+            background-color: var(--color-panel-bg);
+            font-weight: 600;
+        }
+
+        #gridSvg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .grid-cell {
+            stroke: var(--color-border);
+            stroke-width: 1px;
+            fill: var(--color-panel-bg);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .grid-cell:hover {
+            fill: #F3F4F6;
+        }
+
         .grid-cell.conflict-zone {
             fill: var(--color-conflict-highlight);
             fill-opacity: 0.6;
         }
-        .obstacle { fill: var(--color-obstacle); }
-        .agent-path { stroke-width: 4px; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0.3; }
-        .agent-start-goal { stroke-width: 2px; stroke-dasharray: 4, 4; fill: none; }
-        .agent-group { transition: transform 0.2s ease-in-out, opacity 0.4s ease-in-out; }
-        .agent { pointer-events: none; }
-        .agent-label { font-family: var(--font-sans); font-weight: 700; fill: white; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
-        
+
+        .obstacle {
+            fill: var(--color-obstacle);
+        }
+
+        .agent-path {
+            stroke-width: 4px;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 0.3;
+        }
+
+        .agent-start-goal {
+            stroke-width: 2px;
+            stroke-dasharray: 4, 4;
+            fill: none;
+        }
+
+        .agent-group {
+            transition: transform 0.2s ease-in-out, opacity 0.4s ease-in-out;
+        }
+
+        .agent {
+            pointer-events: none;
+        }
+
+        .agent-label {
+            font-family: var(--font-sans);
+            font-weight: 700;
+            fill: white;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none;
+        }
+
         .dynamic-conflict-highlight {
             fill: var(--color-conflict-highlight);
             stroke: var(--color-conflict);
             stroke-width: 3px;
             pointer-events: none;
         }
+
         .dynamic-conflict-highlight.edge {
             fill: none;
             stroke-linecap: round;
         }
 
-        .grid-label { font-size: 10px; fill: var(--color-text-muted); text-anchor: middle; dominant-baseline: middle; }
+        .grid-label {
+            font-size: 10px;
+            fill: var(--color-text-muted);
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
 
         #simControlsContainer {
             grid-row: 2 / 3;
             grid-column: 1 / 2;
-            padding: 1rem 1.5rem; 
-            border-top: 1px solid var(--color-border); 
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--color-border);
             background-color: var(--color-panel-bg);
             z-index: 10;
         }
+
         #simControlsContainer.hidden {
             display: none;
         }
-        .sim-controls { display: flex; gap: 1rem; align-items: center; }
-        .sim-controls button { flex-shrink: 0; padding: 0.5rem; width: 40px; height: 40px; display: grid; place-items: center; }
-        .sim-controls input[type=range] { flex-grow: 1; }
+
+        .sim-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .sim-controls button {
+            flex-shrink: 0;
+            padding: 0.5rem;
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+        }
+
+        .sim-controls input[type=range] {
+            flex-grow: 1;
+        }
 
         .loading {
-            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-            color: var(--color-text-muted); font-size: 0.9rem; padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            padding: 1rem;
         }
 
         /* Modal Styles */
@@ -198,9 +525,11 @@
             align-items: center;
             justify-content: center;
         }
+
         .modal.hidden {
             display: none;
         }
+
         .modal-overlay {
             position: absolute;
             top: 0;
@@ -210,6 +539,7 @@
             background: rgba(17, 24, 39, 0.7);
             animation: fadeIn 0.3s ease-out;
         }
+
         .modal-content {
             position: relative;
             background: #FFFFFF;
@@ -223,31 +553,49 @@
             overflow-y: auto;
             animation: slideIn 0.3s ease-out;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
+
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 1.5rem;
         }
+
         .modal-header h2 {
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--color-text-dark);
             margin: 0;
         }
+
         .modal-header p {
             font-size: 0.9rem;
             color: var(--color-text-muted);
             margin-top: 0.25rem;
         }
+
         .modal-close-btn {
             background: none;
             border: none;
@@ -258,19 +606,23 @@
             line-height: 1;
             transition: color var(--transition-speed);
         }
+
         .modal-close-btn:hover {
             color: var(--color-primary);
         }
+
         .example-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
         }
+
         @media (max-width: 700px) {
             .example-grid {
                 grid-template-columns: 1fr;
             }
         }
+
         .example-card {
             background: #FFFFFF;
             border: 2px solid var(--color-border);
@@ -280,15 +632,18 @@
             cursor: pointer;
             transition: all 0.3s ease-in-out;
         }
+
         .example-card:hover {
             transform: scale(1.02);
             box-shadow: var(--shadow-md);
             border-color: var(--color-primary);
         }
+
         .example-card:active {
             border-color: var(--color-primary);
             box-shadow: 0 0 0 3px rgba(173, 76, 94, 0.2);
         }
+
         .example-preview {
             width: 100%;
             height: 150px;
@@ -300,26 +655,31 @@
             margin-bottom: 1rem;
             overflow: hidden;
         }
+
         .example-preview svg {
             width: 150px;
             height: 150px;
         }
+
         .example-info h3 {
             font-size: 1.1rem;
             font-weight: 600;
             color: var(--color-text-dark);
             margin: 0 0 0.25rem 0;
         }
+
         .example-info .subtitle {
             font-size: 0.85rem;
             color: var(--color-text-muted);
             margin-bottom: 0.75rem;
         }
+
         .example-metadata {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
         }
+
         .example-metadata .badge {
             display: inline-flex;
             align-items: center;
@@ -330,6 +690,7 @@
             padding: 0.25rem 0.5rem;
             border-radius: 6px;
         }
+
         .browse-examples-btn {
             display: flex;
             align-items: center;
@@ -347,11 +708,13 @@
             transition: all var(--transition-speed);
             flex: 1;
         }
+
         .browse-examples-btn:hover {
             background-color: var(--color-panel-bg);
             border-color: var(--color-primary);
             color: var(--color-primary);
         }
+
         .accent-btn {
             display: flex;
             align-items: center;
@@ -369,16 +732,19 @@
             transition: all var(--transition-speed);
             flex: 1;
         }
+
         .accent-btn:hover {
             background-color: var(--color-primary-dark);
             border-color: var(--color-primary-dark);
         }
+
         .example-preview-loading {
             color: var(--color-text-muted);
             font-size: 0.8rem;
         }
     </style>
 </head>
+
 <body>
     <div class="app-container">
         <aside class="control-panel">
@@ -392,13 +758,23 @@
                     <div class="data-source-buttons">
                         <div class="file-input-wrapper">
                             <label for="ttlInput" class="file-input-label">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                                    <path
+                                        d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
+                                </svg>
                                 <span>Upload</span>
                             </label>
                             <input type="file" id="ttlInput" accept=".ttl">
                         </div>
                         <button id="browseExamplesBtn" class="browse-examples-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
+                            </svg>
                             <span>Examples</span>
                         </button>
                     </div>
@@ -408,10 +784,13 @@
             <div id="explanationPanelContainer" class="control-box hidden">
                 <h2 id="explanationPanelTitle">Explanation Panel</h2>
                 <div id="agentSelectorContainer" style="display: none;">
-                    <label for="agent-select" style="font-weight: 500; display: block; margin-bottom: 0.5rem;">Analyze a specific agent:</label>
+                    <label for="agent-select" style="font-weight: 500; display: block; margin-bottom: 0.5rem;">Analyze a
+                        specific agent:</label>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
-                       <select id="agent-select" style="flex-grow: 1; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--color-border);"></select>
-                       <button id="selectAgentBtn" class="file-input-label" style="padding: 0.5rem 1rem; width: auto; flex-shrink: 0;">Select</button>
+                        <select id="agent-select"
+                            style="flex-grow: 1; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--color-border);"></select>
+                        <button id="selectAgentBtn" class="file-input-label"
+                            style="padding: 0.5rem 1rem; width: auto; flex-shrink: 0;">Select</button>
                     </div>
                 </div>
                 <div id="explanationPanel">
@@ -432,17 +811,23 @@
                 <div id="sparql" class="vis-container">
                     <textarea id="sparqlQuery" placeholder="Enter SPARQL query here..."></textarea>
                     <div style="display: flex; justify-content: flex-end;">
-                        <button id="runSparqlBtn" class="file-input-label" style="width: auto; padding: 0.7rem 1.5rem;">Run Query</button>
+                        <button id="runSparqlBtn" class="file-input-label"
+                            style="width: auto; padding: 0.7rem 1.5rem;">Run Query</button>
                     </div>
                     <pre id="sparqlResult"><p>Query results will appear here.</p></pre>
                 </div>
                 <div id="documentation" class="vis-container" style="padding: 0; overflow-y: auto;">
-                    <iframe src="documentation/webvowl/index.html" style="width: 100%; height: 100vh; border: none;"></iframe>
+                    <iframe src="documentation/webvowl/index.html"
+                        style="width: 100%; height: 100vh; border: none;"></iframe>
                 </div>
                 <div id="simControlsContainer" class="hidden">
                     <div class="sim-controls">
                         <button id="playPauseBtn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z" />
+                            </svg>
                         </button>
                         <input type="range" id="timeSlider" min="0" max="10" value="0" step="1">
                         <span id="timeLabel">T=0</span>
@@ -474,7 +859,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const engine = new Comunica.QueryEngine();
-    
+
             const parseTimestamp = (ts) => {
                 if (!ts || typeof ts !== 'string' || !ts.includes('T')) return ts;
                 try {
@@ -483,7 +868,7 @@
                     return ts;
                 }
             };
-    
+
             const config = {
                 agentColors: d3.scaleOrdinal(d3.schemeCategory10),
                 animationSpeed: 800,
@@ -506,8 +891,8 @@
                     metadata: { agents: 5, conflicts: 'None', makespan: 13.0 },
                     preview: {
                         gridSize: [11, 11],
-                        obstacles: [[0,0],[0,9],[0,10],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[0,1],[1,8],[1,9],[1,10],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[0,2],[2,7],[2,8],[2,9],[2,10],[3,0],[3,1],[3,5],[3,8],[3,9],[3,10],[0,3],[4,0],[4,1],[4,5],[4,8],[4,9],[4,10],[5,0],[5,1],[5,8],[5,9],[0,4],[5,10],[6,0],[6,1],[6,8],[6,9],[6,10],[7,0],[7,1],[7,5],[7,8],[0,5],[7,9],[7,10],[8,0],[8,1],[8,5],[8,8],[8,9],[8,10],[9,0],[9,1],[0,6],[9,2],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[9,9],[9,10],[10,0],[0,7],[10,1],[10,2],[10,3],[10,4],[10,5],[10,6],[10,7],[10,8],[10,9],[10,10],[0,8]],
-                        agents: [{id:'Robot-1',start:[3,2],goal:[3,7]},{id:'Robot-2',start:[8,2],goal:[8,7]},{id:'Robot-3',start:[3,7],goal:[3,3]},{id:'Robot-4',start:[8,7],goal:[8,3]},{id:'Robot-5',start:[5,2],goal:[8,6]}]
+                        obstacles: [[0, 0], [0, 9], [0, 10], [1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [0, 1], [1, 8], [1, 9], [1, 10], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [0, 2], [2, 7], [2, 8], [2, 9], [2, 10], [3, 0], [3, 1], [3, 5], [3, 8], [3, 9], [3, 10], [0, 3], [4, 0], [4, 1], [4, 5], [4, 8], [4, 9], [4, 10], [5, 0], [5, 1], [5, 8], [5, 9], [0, 4], [5, 10], [6, 0], [6, 1], [6, 8], [6, 9], [6, 10], [7, 0], [7, 1], [7, 5], [7, 8], [0, 5], [7, 9], [7, 10], [8, 0], [8, 1], [8, 5], [8, 8], [8, 9], [8, 10], [9, 0], [9, 1], [0, 6], [9, 2], [9, 3], [9, 4], [9, 5], [9, 6], [9, 7], [9, 8], [9, 9], [9, 10], [10, 0], [0, 7], [10, 1], [10, 2], [10, 3], [10, 4], [10, 5], [10, 6], [10, 7], [10, 8], [10, 9], [10, 10], [0, 8]],
+                        agents: [{ id: 'Robot-1', start: [3, 2], goal: [3, 7] }, { id: 'Robot-2', start: [8, 2], goal: [8, 7] }, { id: 'Robot-3', start: [3, 7], goal: [3, 3] }, { id: 'Robot-4', start: [8, 7], goal: [8, 3] }, { id: 'Robot-5', start: [5, 2], goal: [8, 6] }]
                     }
                 },
                 {
@@ -517,8 +902,8 @@
                     metadata: { agents: 5, conflicts: 'None', makespan: 11.0 },
                     preview: {
                         gridSize: [11, 11],
-                        obstacles: [[0,0],[0,9],[0,10],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[0,1],[1,8],[1,9],[1,10],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[0,2],[2,7],[2,8],[2,9],[2,10],[3,0],[3,1],[3,8],[3,9],[3,10],[4,0],[0,3],[4,1],[4,4],[4,5],[4,6],[4,8],[4,9],[4,10],[5,0],[5,1],[5,4],[0,4],[5,8],[5,9],[5,10],[6,0],[6,1],[6,8],[6,9],[6,10],[7,0],[7,1],[0,5],[7,3],[7,8],[7,9],[7,10],[8,0],[8,1],[8,5],[8,8],[8,9],[8,10],[0,6],[9,0],[9,1],[9,2],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[9,9],[0,7],[9,10],[10,0],[10,1],[10,2],[10,3],[10,4],[10,5],[10,6],[10,7],[10,8],[0,8],[10,9],[10,10]],
-                        agents: [{id:'Robot-1',start:[3,2],goal:[4,7]},{id:'Robot-2',start:[8,2],goal:[8,7]},{id:'Robot-3',start:[3,7],goal:[3,3]},{id:'Robot-4',start:[8,7],goal:[8,3]},{id:'Robot-5',start:[5,2],goal:[8,6]}]
+                        obstacles: [[0, 0], [0, 9], [0, 10], [1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [0, 1], [1, 8], [1, 9], [1, 10], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [0, 2], [2, 7], [2, 8], [2, 9], [2, 10], [3, 0], [3, 1], [3, 8], [3, 9], [3, 10], [4, 0], [0, 3], [4, 1], [4, 4], [4, 5], [4, 6], [4, 8], [4, 9], [4, 10], [5, 0], [5, 1], [5, 4], [0, 4], [5, 8], [5, 9], [5, 10], [6, 0], [6, 1], [6, 8], [6, 9], [6, 10], [7, 0], [7, 1], [0, 5], [7, 3], [7, 8], [7, 9], [7, 10], [8, 0], [8, 1], [8, 5], [8, 8], [8, 9], [8, 10], [0, 6], [9, 0], [9, 1], [9, 2], [9, 3], [9, 4], [9, 5], [9, 6], [9, 7], [9, 8], [9, 9], [0, 7], [9, 10], [10, 0], [10, 1], [10, 2], [10, 3], [10, 4], [10, 5], [10, 6], [10, 7], [10, 8], [0, 8], [10, 9], [10, 10]],
+                        agents: [{ id: 'Robot-1', start: [3, 2], goal: [4, 7] }, { id: 'Robot-2', start: [8, 2], goal: [8, 7] }, { id: 'Robot-3', start: [3, 7], goal: [3, 3] }, { id: 'Robot-4', start: [8, 7], goal: [8, 3] }, { id: 'Robot-5', start: [5, 2], goal: [8, 6] }]
                     }
                 },
                 {
@@ -528,8 +913,8 @@
                     metadata: { agents: 5, conflicts: 'None', makespan: 15.0 },
                     preview: {
                         gridSize: [11, 11],
-                        obstacles: [[0,0],[0,9],[0,10],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[0,1],[1,8],[1,9],[1,10],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[0,2],[2,7],[2,8],[2,9],[2,10],[3,0],[3,1],[3,8],[3,9],[3,10],[4,0],[0,3],[4,1],[4,3],[4,4],[4,6],[4,7],[4,8],[4,9],[4,10],[5,0],[5,1],[0,4],[5,8],[5,9],[5,10],[6,0],[6,1],[6,2],[6,3],[6,4],[6,6],[6,7],[0,5],[6,8],[6,9],[6,10],[7,0],[7,1],[7,8],[7,9],[7,10],[8,0],[8,1],[0,6],[8,8],[8,9],[8,10],[9,0],[9,1],[9,2],[9,3],[9,4],[9,5],[9,6],[0,7],[9,7],[9,8],[9,9],[9,10],[10,0],[10,1],[10,2],[10,3],[10,4],[10,5],[0,8],[10,6],[10,7],[10,8],[10,9],[10,10]],
-                        agents: [{id:'Robot-1',start:[3,2],goal:[5,7]},{id:'Robot-2',start:[5,7],goal:[8,2]},{id:'Robot-3',start:[8,7],goal:[3,2]},{id:'Robot-4',start:[3,5],goal:[8,5]},{id:'Robot-5',start:[5,2],goal:[3,7]}]
+                        obstacles: [[0, 0], [0, 9], [0, 10], [1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [0, 1], [1, 8], [1, 9], [1, 10], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [0, 2], [2, 7], [2, 8], [2, 9], [2, 10], [3, 0], [3, 1], [3, 8], [3, 9], [3, 10], [4, 0], [0, 3], [4, 1], [4, 3], [4, 4], [4, 6], [4, 7], [4, 8], [4, 9], [4, 10], [5, 0], [5, 1], [0, 4], [5, 8], [5, 9], [5, 10], [6, 0], [6, 1], [6, 2], [6, 3], [6, 4], [6, 6], [6, 7], [0, 5], [6, 8], [6, 9], [6, 10], [7, 0], [7, 1], [7, 8], [7, 9], [7, 10], [8, 0], [8, 1], [0, 6], [8, 8], [8, 9], [8, 10], [9, 0], [9, 1], [9, 2], [9, 3], [9, 4], [9, 5], [9, 6], [0, 7], [9, 7], [9, 8], [9, 9], [9, 10], [10, 0], [10, 1], [10, 2], [10, 3], [10, 4], [10, 5], [0, 8], [10, 6], [10, 7], [10, 8], [10, 9], [10, 10]],
+                        agents: [{ id: 'Robot-1', start: [3, 2], goal: [5, 7] }, { id: 'Robot-2', start: [5, 7], goal: [8, 2] }, { id: 'Robot-3', start: [8, 7], goal: [3, 2] }, { id: 'Robot-4', start: [3, 5], goal: [8, 5] }, { id: 'Robot-5', start: [5, 2], goal: [3, 7] }]
                     }
                 },
                 {
@@ -539,8 +924,8 @@
                     metadata: { agents: 5, conflicts: 'None', makespan: 19.0 },
                     preview: {
                         gridSize: [11, 11],
-                        obstacles: [[0,0],[0,9],[0,10],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[0,1],[1,8],[1,9],[1,10],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[0,2],[2,7],[2,8],[2,9],[2,10],[3,0],[3,1],[3,4],[3,5],[3,6],[3,8],[0,3],[3,9],[3,10],[4,0],[4,1],[4,4],[4,5],[4,6],[4,8],[4,9],[4,10],[0,4],[5,0],[5,1],[5,8],[5,9],[5,10],[6,0],[6,1],[6,4],[6,5],[6,6],[0,5],[6,8],[6,9],[6,10],[7,0],[7,1],[7,4],[7,5],[7,6],[7,8],[7,9],[0,6],[7,10],[8,0],[8,1],[8,8],[8,9],[8,10],[9,0],[9,1],[9,2],[9,3],[0,7],[9,4],[9,5],[9,6],[9,7],[9,8],[9,9],[9,10],[10,0],[10,1],[10,2],[0,8],[10,3],[10,4],[10,5],[10,6],[10,7],[10,8],[10,9],[10,10]],
-                        agents: [{id:'Robot-1',start:[3,2],goal:[3,7]},{id:'Robot-2',start:[4,7],goal:[4,2]},{id:'Robot-3',start:[7,2],goal:[7,7]},{id:'Robot-4',start:[8,7],goal:[8,2]},{id:'Robot-5',start:[5,2],goal:[5,7]}]
+                        obstacles: [[0, 0], [0, 9], [0, 10], [1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [0, 1], [1, 8], [1, 9], [1, 10], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [0, 2], [2, 7], [2, 8], [2, 9], [2, 10], [3, 0], [3, 1], [3, 4], [3, 5], [3, 6], [3, 8], [0, 3], [3, 9], [3, 10], [4, 0], [4, 1], [4, 4], [4, 5], [4, 6], [4, 8], [4, 9], [4, 10], [0, 4], [5, 0], [5, 1], [5, 8], [5, 9], [5, 10], [6, 0], [6, 1], [6, 4], [6, 5], [6, 6], [0, 5], [6, 8], [6, 9], [6, 10], [7, 0], [7, 1], [7, 4], [7, 5], [7, 6], [7, 8], [7, 9], [0, 6], [7, 10], [8, 0], [8, 1], [8, 8], [8, 9], [8, 10], [9, 0], [9, 1], [9, 2], [9, 3], [0, 7], [9, 4], [9, 5], [9, 6], [9, 7], [9, 8], [9, 9], [9, 10], [10, 0], [10, 1], [10, 2], [0, 8], [10, 3], [10, 4], [10, 5], [10, 6], [10, 7], [10, 8], [10, 9], [10, 10]],
+                        agents: [{ id: 'Robot-1', start: [3, 2], goal: [3, 7] }, { id: 'Robot-2', start: [4, 7], goal: [4, 2] }, { id: 'Robot-3', start: [7, 2], goal: [7, 7] }, { id: 'Robot-4', start: [8, 7], goal: [8, 2] }, { id: 'Robot-5', start: [5, 2], goal: [5, 7] }]
                     }
                 },
                 {
@@ -550,8 +935,8 @@
                     metadata: { agents: 5, conflicts: 'None', makespan: 13.0 },
                     preview: {
                         gridSize: [11, 11],
-                        obstacles: [[0,0],[0,9],[0,10],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[0,1],[1,8],[1,9],[1,10],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[0,2],[2,7],[2,8],[2,9],[2,10],[3,0],[3,1],[3,8],[3,9],[3,10],[4,0],[0,3],[4,1],[4,3],[4,5],[4,8],[4,9],[4,10],[5,0],[5,1],[5,5],[5,8],[0,4],[5,9],[5,10],[6,0],[6,1],[6,3],[6,8],[6,9],[6,10],[7,0],[7,1],[0,5],[7,3],[7,5],[7,8],[7,9],[7,10],[8,0],[8,1],[8,8],[8,9],[8,10],[0,6],[9,0],[9,1],[9,2],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[9,9],[0,7],[9,10],[10,0],[10,1],[10,2],[10,3],[10,4],[10,5],[10,6],[10,7],[10,8],[0,8],[10,9],[10,10]],
-                        agents: [{id:'Robot-1',start:[3,2],goal:[8,7]},{id:'Robot-2',start:[3,7],goal:[8,2]},{id:'Robot-3',start:[4,2],goal:[7,7]},{id:'Robot-4',start:[5,4],goal:[6,5]},{id:'Robot-5',start:[8,3],goal:[3,6]}]
+                        obstacles: [[0, 0], [0, 9], [0, 10], [1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [0, 1], [1, 8], [1, 9], [1, 10], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [0, 2], [2, 7], [2, 8], [2, 9], [2, 10], [3, 0], [3, 1], [3, 8], [3, 9], [3, 10], [4, 0], [0, 3], [4, 1], [4, 3], [4, 5], [4, 8], [4, 9], [4, 10], [5, 0], [5, 1], [5, 5], [5, 8], [0, 4], [5, 9], [5, 10], [6, 0], [6, 1], [6, 3], [6, 8], [6, 9], [6, 10], [7, 0], [7, 1], [0, 5], [7, 3], [7, 5], [7, 8], [7, 9], [7, 10], [8, 0], [8, 1], [8, 8], [8, 9], [8, 10], [0, 6], [9, 0], [9, 1], [9, 2], [9, 3], [9, 4], [9, 5], [9, 6], [9, 7], [9, 8], [9, 9], [0, 7], [9, 10], [10, 0], [10, 1], [10, 2], [10, 3], [10, 4], [10, 5], [10, 6], [10, 7], [10, 8], [0, 8], [10, 9], [10, 10]],
+                        agents: [{ id: 'Robot-1', start: [3, 2], goal: [8, 7] }, { id: 'Robot-2', start: [3, 7], goal: [8, 2] }, { id: 'Robot-3', start: [4, 2], goal: [7, 7] }, { id: 'Robot-4', start: [5, 4], goal: [6, 5] }, { id: 'Robot-5', start: [8, 3], goal: [3, 6] }]
                     }
                 }
             ];
@@ -645,7 +1030,7 @@
                 lastInteraction: null,
                 animationInterval: null,
             };
-            
+
             const rdfProcessor = {
                 async parseAndStore(ttlContent) {
                     const N3 = window.N3;
@@ -659,12 +1044,12 @@
                         });
                     });
                 },
-    
+
                 async extractGridData(store) {
                     const N3 = window.N3;
                     const { namedNode } = N3.DataFactory;
                     const gridData = { gridSize: [0, 0], obstacles: [], agents: {}, conflicts: [], environmentId: null };
-                    
+
                     const envQuad = store.getQuads(null, namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), namedNode('http://example.org/ma#Environment'))[0];
                     if (envQuad) {
                         const envSubject = envQuad.subject;
@@ -679,16 +1064,16 @@
                         if (locQuad) {
                             const x = store.getQuads(locQuad.object, namedNode('http://example.org/ma#xCoordinate'), null)[0]?.object.value;
                             const y = store.getQuads(locQuad.object, namedNode('http://example.org/ma#yCoordinate'), null)[0]?.object.value;
-                            // Store as [x, y] (column, row) to match grid coordinate system
-                            if (x && y) gridData.obstacles.push([parseInt(x), parseInt(y)]);
+                            // Store as [y, x] (row, column) to match original grid view
+                            if (x && y) gridData.obstacles.push([parseInt(y), parseInt(x)]);
                         }
                     });
-                    
+
                     store.getQuads(null, namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), namedNode('http://example.org/ma#Agent')).forEach(q => {
                         const agentName = q.subject.value.split('#').pop();
                         gridData.agents[agentName] = [];
                     });
-                    
+
                     store.getQuads(null, namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), namedNode('http://example.org/ma#JointPlan')).forEach(jpQuad => {
                         store.getQuads(jpQuad.subject, namedNode('http://example.org/ma#composedOfSubPlans'), null).forEach(spQuad => {
                             const belongsTo = store.getQuads(spQuad.object, namedNode('http://example.org/ma#belongsToAgent'), null)[0]?.object.value;
@@ -719,8 +1104,8 @@
                             const x = store.getQuads(locQuad.object, namedNode('http://example.org/ma#xCoordinate'), null)[0]?.object.value;
                             const y = store.getQuads(locQuad.object, namedNode('http://example.org/ma#yCoordinate'), null)[0]?.object.value;
                             const timeStamp = store.getQuads(timeQuad.object, namedNode('http://www.w3.org/2006/time#inXSDDateTimeStamp'), null)[0]?.object.value;
-                            // Store raw_location as "x,y" (column,row) to match grid coordinate system
-                            if (x && y && timeStamp) gridData.conflicts.push({ id: q.subject.value, time: parseTimestamp(timeStamp), raw_location: `${x},${y}`, type: 'vertex' });
+                            // Store raw_location as "y,x" (row,column) to match original grid view
+                            if (x && y && timeStamp) gridData.conflicts.push({ id: q.subject.value, time: parseTimestamp(timeStamp), raw_location: `${y},${x}`, type: 'vertex' });
                         }
                     });
                     return gridData;
@@ -738,18 +1123,18 @@
                             const locNode = firstQuad.object;
                             const x = store.getQuads(locNode, namedNode('http://example.org/ma#xCoordinate'), null)[0]?.object.value;
                             const y = store.getQuads(locNode, namedNode('http://example.org/ma#yCoordinate'), null)[0]?.object.value;
-                            // Store as [x, y] (column, row) to match grid coordinate system
-                            if (x && y) path.push([parseInt(x), parseInt(y)]);
+                            // Store as [y, x] (row, column) to match original grid view
+                            if (x && y) path.push([parseInt(y), parseInt(x)]);
                         }
                         currentNode = store.getQuads(currentNode, namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'), null)[0]?.object;
                     }
                     return path;
                 }
             };
-    
+
             const sparqlQueries = {
                 getAgentFinalPlan: ({ agentId }) => ` SELECT ?cost ?timestamp ?x ?y ?conflict WHERE { ma:FinalJointPlan ma:composedOfSubPlans ?plan . ?plan ma:belongsToAgent ma:${agentId} ; ma:hasPlanCost ?cost . ?plan ma:planData ?segment . ?segment ma:hasValidTime/time:hasBeginning/time:inXSDDateTimeStamp ?timestamp ; ma:hasPathSequence/rdf:rest*/rdf:first ?cellNode . ?cellNode ma:xCoordinate ?x ; ma:yCoordinate ?y . OPTIONAL { ?conflict ma:conflictLocation ?cellNode ; ma:involvesAgentsEvent ma:${agentId} ; ma:occursAtTime/time:inXSDDateTimeStamp ?timestamp . } } ORDER BY ASC(?timestamp) `,
-                
+
                 // Query conflicts at a specific grid location (x=column, y=row)
                 getAllConflictsAtLocation: ({ locationStr }) => {
                     const [x, y] = locationStr.split(',');
@@ -765,7 +1150,7 @@
                         } GROUP BY ?conflict ?timestamp ?type ORDER BY ?timestamp
                     `;
                 },
-                
+
                 getAllAgentConflicts: ({ agentId }) => ` SELECT ?conflict ?timestamp ?type (GROUP_CONCAT(DISTINCT STRAFTER(STR(?otherAgent), "#"); separator=", ") as ?involvedAgents) (GROUP_CONCAT(CONCAT("(", STR(?y), ",", STR(?x), ")"); separator=";") as ?locations) WHERE { ?conflict a ma:CollisionEvent ; ma:involvesAgentsEvent ma:${agentId}, ?otherAgent ; ma:occursAtTime/time:inXSDDateTimeStamp ?timestamp ; ma:conflictTypeEvent ?type ; ma:conflictLocation ?locNode . ?locNode ma:xCoordinate ?x ; ma:yCoordinate ?y . FILTER(?otherAgent != ma:${agentId}) } GROUP BY ?conflict ?timestamp ?type ORDER BY ?timestamp `,
                 explainConflictResolutionAndPlanChange: ({ conflictURI }) => ` SELECT ?resolvedPlan ?replanningAgentName ?otherAgentName ?rationale ?alertType ?originalCost ?newCost (GROUP_CONCAT(CONCAT("(", STR(?y), ",", STR(?x), ")"); separator=";") as ?locations) WHERE { BIND(<${conflictURI}> as ?conflict) ?resolvedPlan a ma:ResolvedSubPlan ; ma:resolvesConflict ?conflict ; ma:belongsToAgent ?replanningAgent ; ma:hasPlanCost ?newCost ; ma:generatedBy ?activity . ?activity prov:used ?strategy . ?strategy ma:triggeredBy ?alert . ?alert ma:selectionRationale ?rationale . OPTIONAL { ?alert ma:alertType ?alertType . } ?resolvedPlan ma:derivesFrom ?originalPlan . ?originalPlan a ma:OriginalSubPlan ; ma:hasPlanCost ?originalCost . ?conflict ma:involvesAgentsEvent ?otherAgent ; ma:conflictLocation ?locNode . ?locNode ma:xCoordinate ?x ; ma:yCoordinate ?y . FILTER(?replanningAgent != ?otherAgent) BIND(STRAFTER(STR(?replanningAgent), "#") AS ?replanningAgentName) BIND(STRAFTER(STR(?otherAgent), "#") AS ?otherAgentName) } GROUP BY ?resolvedPlan ?replanningAgentName ?otherAgentName ?rationale ?alertType ?originalCost ?newCost `,
                 explainAgentWait: ({ agentId }) => ` SELECT ?startTS ?endTS ?otherAgentName ?conflictTS ?x ?y WHERE { ?resolvedPlan a ma:ResolvedSubPlan; ma:belongsToAgent ma:${agentId} . FILTER EXISTS { ma:FinalJointPlan ma:composedOfSubPlans ?resolvedPlan . } ?resolvedPlan ma:planData ?seg1, ?seg2 . ?seg1 ma:hasPathSequence/rdf:rest*/rdf:first ?locNode . ?seg1 ma:hasValidTime/time:hasBeginning/time:inXSDDateTimeStamp ?startTS . ?seg2 ma:hasPathSequence/rdf:rest*/rdf:first ?locNode . ?seg2 ma:hasValidTime/time:hasBeginning/time:inXSDDateTimeStamp ?endTS . ?resolvedPlan ma:resolvesConflict ?conflict . ?conflict ma:involvesAgentsEvent ?otherAgent ; ma:occursAtTime/time:inXSDDateTimeStamp ?conflictTS ; ma:conflictLocation ?locNode . ?locNode ma:xCoordinate ?x ; ma:yCoordinate ?y . FILTER(?otherAgent != ma:${agentId}) BIND(STRAFTER(STR(?otherAgent), "#") AS ?otherAgentName) } `,
@@ -778,14 +1163,14 @@
                 getPathsForAgentPlans: ({ agentId }) => ` SELECT ?plan ?timestamp ?x ?y WHERE { ?plan ma:belongsToAgent ma:${agentId} . ?plan ma:planData ?segment . ?segment ma:hasValidTime/time:hasBeginning/time:inXSDDateTimeStamp ?timestamp ; ma:hasPathSequence/rdf:rest*/rdf:first ?cellNode . ?cellNode ma:xCoordinate ?x ; ma:yCoordinate ?y . } ORDER BY ?plan ?timestamp `,
                 getPathForPlan: ({ planURI }) => ` SELECT ?timestamp ?x ?y WHERE { <${planURI}> ma:planData ?segment . ?segment ma:hasValidTime/time:hasBeginning/time:inXSDDateTimeStamp ?timestamp ; ma:hasPathSequence/rdf:rest*/rdf:first ?cellNode . ?cellNode ma:xCoordinate ?x ; ma:yCoordinate ?y . } ORDER BY ?timestamp `
             };
-        
+
             const explanationEngine = {
                 _parseTimeFromTimestamp(timestampStr) { return parseTimestamp(timestampStr); },
                 async generateExplanation(question, queryKey, results) {
                     let content = '';
                     const followUps = [];
                     const params = state.lastInteraction.params;
-        
+
                     if (!results || results.length === 0) {
                         content = `<p>I couldn't find any specific details for that query.</p>`;
                         ui.highlightConflicts([]);
@@ -794,28 +1179,28 @@
                         if (state.lastInteraction.conflictURI) conflictIdsToHighlight.push(state.lastInteraction.conflictURI);
                         if (conflictIdsToHighlight.length > 0) ui.highlightConflicts(conflictIdsToHighlight);
                         else ui.highlightConflicts([]);
-    
+
                         switch (queryKey) {
                             case 'getAgentResolutionHistory': {
                                 const agentName = ui.getAgentDisplayName(params.agentId);
                                 let explanationHtml = `<p>Here is the step-by-step resolution history for <strong>${agentName}</strong>:</p>`;
-                                
+
                                 const allPathData = await app.executeSparqlQuery(sparqlQueries.getPathsForAgentPlans(params));
                                 const pathsByPlan = d3.group(allPathData, d => d.plan);
-                                
+
                                 // --- FIX: Robust sorting in JavaScript to ensure order ---
                                 results.sort((a, b) => {
                                     if (a.planType === 'Original Plan') return -1;
                                     if (b.planType === 'Original Plan') return 1;
                                     return this._parseTimeFromTimestamp(a.timestamp) - this._parseTimeFromTimestamp(b.timestamp);
                                 });
-    
+
                                 results.forEach((step, index) => {
                                     const pathSegments = pathsByPlan.get(step.plan) || [];
-                                    pathSegments.sort((a,b) => this._parseTimeFromTimestamp(a.timestamp) - this._parseTimeFromTimestamp(b.timestamp));
+                                    pathSegments.sort((a, b) => this._parseTimeFromTimestamp(a.timestamp) - this._parseTimeFromTimestamp(b.timestamp));
                                     const pathString = pathSegments.map(p => `(${p.x},${p.y})`).join(' → ');
                                     explanationHtml += `<hr style="margin: 0.75rem 0; border-color: var(--color-border);">`;
-    
+
                                     if (step.planType === 'Original Plan') {
                                         explanationHtml += `<p><strong>Step 0: Initial Plan</strong><br>The first plan was generated with an initial cost of <strong>${parseFloat(step.planCost).toFixed(2)}</strong>.</p>`;
                                         if (pathString) explanationHtml += `<p style="font-size:0.8rem; word-break:break-all; margin-top: 0.5rem;"><strong>Path:</strong> ${pathString}</p>`;
@@ -823,7 +1208,7 @@
                                         const prevStep = results[index - 1];
                                         const prevPlanId = prevStep.plan;
                                         const prevPathSegments = pathsByPlan.get(prevPlanId) || [];
-                                        prevPathSegments.sort((a,b) => this._parseTimeFromTimestamp(a.timestamp) - this._parseTimeFromTimestamp(b.timestamp));
+                                        prevPathSegments.sort((a, b) => this._parseTimeFromTimestamp(a.timestamp) - this._parseTimeFromTimestamp(b.timestamp));
                                         const prevPathString = prevPathSegments.map(p => `(${p.x},${p.y})`).join(' → ');
                                         const cost = parseFloat(step.planCost), prevCost = parseFloat(prevStep.planCost), change = cost - prevCost;
                                         let costChangeHtml = (change > 0) ? `an increase of <span style="color: #DC2626;">${change.toFixed(2)}</span>` : (change < 0) ? `a decrease of <span style="color: #10B981;">${Math.abs(change).toFixed(2)}</span>` : `no change`;
@@ -848,12 +1233,12 @@
                 },
             };
             // We have to put the full generateExplanation logic here because of its size and complexity
-            explanationEngine.generateExplanation = async function(question, queryKey, results) { let content = ''; const followUps = []; const params = state.lastInteraction.params; if (!results || results.length === 0) { content = `<p>I couldn't find any specific details for that query.</p>`; ui.highlightConflicts([]); } else { const conflictIdsToHighlight = results.flatMap(r => r.conflict ? r.conflict.split(',') : []).filter(Boolean); if (state.lastInteraction.conflictURI) { conflictIdsToHighlight.push(state.lastInteraction.conflictURI); } if (conflictIdsToHighlight.length > 0) { ui.highlightConflicts(conflictIdsToHighlight); } else { ui.highlightConflicts([]); } switch (queryKey) { case 'getAgentFinalPlan': { const agentId = params.agentId; const agentName = ui.getAgentDisplayName(agentId); const uniqueSteps = Array.from(d3.group(results, d => d.timestamp).values()).map(group => group[0]); const cost = uniqueSteps[0].cost; const path = uniqueSteps.map(r => `(${r.x},${r.y})`); const trajectoryString = path.join(' → '); const summary = ui.summarizeTrajectory(path); content = `<p>The final plan for <strong>${agentName}</strong> has a cost of <strong>${cost}</strong>.</p> <p><strong>Summary:</strong> ${summary}</p> <p><strong>Full Path:</strong></p> <p style="font-size:0.8rem; word-break:break-all;">${trajectoryString}</p>`; followUps.push({ text: `What conflicts was ${agentName} in?`, queryKey: 'getAllAgentConflicts', params: { agentId } }); if (path.some((cell, i) => i > 0 && cell === path[i-1])) { followUps.push({ text: `Why did ${agentName} have to wait?`, queryKey: 'explainAgentWait', params: { agentId } }); } break; } case 'getAllAgentConflicts': { const agentNameForConflicts = ui.getAgentDisplayName(params.agentId); content = `<p><strong>${agentNameForConflicts}</strong> was involved in these conflicts (highlighted on grid):</p>`; const processedResults = results.map(r => ({ time: r.timestamp, type: r.type, location: r.locations, with: r.involvedAgents.split(',').map(ui.getAgentDisplayName).join(', ') })); content += ui.createResultsTable(processedResults); results.forEach(conflict => { followUps.push({ text: `How was the conflict at ${conflict.locations} resolved?`, type: 'follow-up', queryKey: 'explainConflictResolutionAndPlanChange', params: { conflictURI: conflict.conflict } }); }); break; } case 'getAllConflictsAtLocation': { content = `<p>The following conflicts occurred at this location (highlighted on grid):</p>`; const processedResults = results.map(r => ({ time: r.timestamp, type: r.type, agents: r.agents.split(',').map(ui.getAgentDisplayName).join(', ') })); content += ui.createResultsTable(processedResults); results.forEach(conflict => { followUps.push({ text: `How was the conflict at T=${r.timestamp} resolved?`, type: 'follow-up', queryKey: 'explainConflictResolutionAndPlanChange', params: { conflictURI: conflict.conflict } }); }); break; } case 'explainConflictResolutionAndPlanChange': { const res = results[0]; const pathData = await app.executeSparqlQuery(sparqlQueries.getPathForPlan({ planURI: res.resolvedPlan })); const newPathString = pathData.map(p => `(${p.x},${p.y})`).join(' → '); content = `<p>A conflict occurred at location <strong>${res.locations}</strong>.</p> <p>To resolve the conflict with <strong>${ui.getAgentDisplayName(res.otherAgentName)}</strong>, <strong>${ui.getAgentDisplayName(res.replanningAgentName)}</strong> changed its plan.</p> <p style="font-size:0.9em; word-break:break-all; margin-top: 0.5rem;"><strong>Show new plan:</strong> ${newPathString}</p> <p>This changed the plan cost from <strong>${res.originalCost}</strong> to <strong>${res.newCost}</strong>.</p> <p><strong>Rationale:</strong> Using a <strong>${res.alertType || 'default'}</strong> strategy, ${res.rationale}</p>`; break; } case 'explainAgentWait': { const waits = results.filter(r => r.endTS === r.startTS + 1); if (!waits || waits.length === 0) { content = `<p><strong>${ui.getAgentDisplayName(params.agentId)}</strong> did not have any wait states in its final plan.</p>`; } else { const totalWait = waits.length; const waitInfo = waits[0]; const conflictTime = waitInfo.conflictTS; const waitingAgentName = ui.getAgentDisplayName(params.agentId); content = `<p><strong>${waitingAgentName}</strong> had to wait for a total of <strong>${totalWait}</strong> second(s) in its final plan.</p> <p>This was necessary to avoid a planned conflict with <strong>${ui.getAgentDisplayName(waitInfo.otherAgentName)}</strong> that would have occurred at (${waitInfo.x},${waitInfo.y}) at T=${conflictTime}.</p>`; } break; } case 'getPlanMakespan': { const makespan = results[0].makespan; const costData = await app.executeSparqlQuery(sparqlQueries.getCostByAgent()); const replanData = await app.executeSparqlQuery(sparqlQueries.countReplans()); const sumOfCosts = costData.reduce((sum, row) => sum + parseFloat(row.cost), 0); const replanCount = replanData.length > 0 ? replanData[0].replanCount : 0; content = `<p>Here is a summary of the final joint plan:</p> <p>The overall <strong>makespan</strong> is <strong>${makespan}</strong>.</p> <p>The <strong>sum of individual plan costs</strong> is <strong>${sumOfCosts.toFixed(2)}</strong>.</p> <p>A total of <strong>${replanCount} replans</strong> were required.</p>`; break; } case 'getCostByAgent': { content = `<p>The final plan cost for each agent is as follows:</p>`; const costResults = results.map(r => ({ Agent: ui.getAgentDisplayName(r.agentName), Cost: parseFloat(r.cost).toFixed(2) })); content += ui.createResultsTable(costResults); break; } case 'compareOriginalResolved': { const agentName = ui.getAgentDisplayName(params.agentId); const originalPath = results.filter(r => r.phase === 'Original').map(r => `(${r.x},${r.y})`); const resolvedPath = results.filter(r => r.phase === 'Resolved').map(r => `(${r.x},${r.y})`); const originalCost = parseFloat(results[0].originalCost).toFixed(2); const newCost = parseFloat(results[0].newCost).toFixed(2); const costIncrease = (newCost - originalCost).toFixed(2); content = `<p>Comparison for <strong>${agentName}</strong>:</p> <p>The <strong>original plan</strong> cost was <strong>${originalCost}</strong>.</p> <p>The <strong>new resolved plan</strong> cost is <strong>${newCost}</strong> (increase of <strong>${costIncrease}</strong>).</p> <hr style="margin: 1rem 0; border-color: var(--color-border);"> <p><strong>Original Path:</strong> ${originalPath.join(' → ')}</p> <p><strong>Resolved Path:</strong> ${resolvedPath.join(' → ')}</p>`; break; } case 'findMostCongestedLocations': { content = `<p>The most congested locations are:</p>`; const congestionResults = results.map(r => ({ Location: `(${r.x},${r.y})`, 'Conflict Count': r.conflictCount })); content += ui.createResultsTable(congestionResults); break; } case 'getAgentResolutionHistory': { const agentName = ui.getAgentDisplayName(params.agentId); let explanationHtml = `<p>Here is the step-by-step resolution history for <strong>${agentName}</strong>:</p>`; const allPathData = await app.executeSparqlQuery(sparqlQueries.getPathsForAgentPlans(params)); const pathsByPlan = d3.group(allPathData, d => d.plan); results.sort((a, b) => { if (a.planType === 'Original Plan') return -1; if (b.planType === 'Original Plan') return 1; return a.timestamp - b.timestamp; }); results.forEach((step, index) => { const pathString = (pathsByPlan.get(step.plan) || []).map(p => `(${p.x},${p.y})`).join(' → '); explanationHtml += `<hr style="margin: 0.75rem 0; border-color: var(--color-border);">`; if (step.planType === 'Original Plan') { explanationHtml += `<p><strong>Step 0: Initial Plan</strong><br> The first plan was generated with an initial cost of <strong>${parseFloat(step.planCost).toFixed(2)}</strong>.</p>`; if (pathString) { explanationHtml += `<p style="font-size:0.8rem; word-break:break-all; margin-top: 0.5rem;"><strong>Path:</strong> ${pathString}</p>`; } } else { const prevStep = results[index - 1]; const prevPathId = prevStep.plan; const prevPathString = (pathsByPlan.get(prevPathId) || []).map(p => `(${p.x},${p.y})`).join(' → '); const cost = parseFloat(step.planCost), prevCost = parseFloat(prevStep.planCost), change = cost - prevCost; let costChangeHtml = (change > 0) ? `an increase of <span style="color: #DC2626;">${change.toFixed(2)}</span>` : (change < 0) ? `a decrease of <span style="color: #10B981;">${Math.abs(change).toFixed(2)}</span>` : `no change`; const otherAgents = step.otherAgentName ? step.otherAgentName.split(',').map(name => ui.getAgentDisplayName(name.trim())).join(', ') : ''; const otherAgentDisplay = otherAgents ? ` with <strong>${otherAgents}</strong>` : ''; explanationHtml += `<p><strong>Step ${index}: Replanning Event</strong></p> <p><strong>Conflict Details:</strong> A conflict was detected${otherAgentDisplay} at time <strong>T=${step.timestamp}</strong> in location <strong>(${step.x},${step.y})</strong>.</p> <p><strong>Resulting Plan Change:</strong></p> <ul> <li>The plan cost changed from <strong>${prevCost.toFixed(2)}</strong> to <strong>${cost.toFixed(2)}</strong> (${costChangeHtml}).</li> <li><strong>Old Path:</strong> <span style="font-size:0.8rem; word-break:break-all;">${prevPathString}</span></li> <li><strong>New Path:</strong> <span style="font-size:0.8rem; word-break:break-all;">${pathString}</span></li> </ul> <p style="font-size:0.9em; color: var(--color-text-muted); margin-top: 0.25rem;"> <em>Planner Rationale: "${step.rationale}"</em></p>`; } }); content = explanationHtml; break; } default: { content = `<p>Here is the data I found:</p>`; content += ui.createResultsTable(results); } } } ui.renderChatResponse(question, content, queryKey, results, followUps); };
-    
+            explanationEngine.generateExplanation = async function (question, queryKey, results) { let content = ''; const followUps = []; const params = state.lastInteraction.params; if (!results || results.length === 0) { content = `<p>I couldn't find any specific details for that query.</p>`; ui.highlightConflicts([]); } else { const conflictIdsToHighlight = results.flatMap(r => r.conflict ? r.conflict.split(',') : []).filter(Boolean); if (state.lastInteraction.conflictURI) { conflictIdsToHighlight.push(state.lastInteraction.conflictURI); } if (conflictIdsToHighlight.length > 0) { ui.highlightConflicts(conflictIdsToHighlight); } else { ui.highlightConflicts([]); } switch (queryKey) { case 'getAgentFinalPlan': { const agentId = params.agentId; const agentName = ui.getAgentDisplayName(agentId); const uniqueSteps = Array.from(d3.group(results, d => d.timestamp).values()).map(group => group[0]); const cost = uniqueSteps[0].cost; const path = uniqueSteps.map(r => `(${r.x},${r.y})`); const trajectoryString = path.join(' → '); const summary = ui.summarizeTrajectory(path); content = `<p>The final plan for <strong>${agentName}</strong> has a cost of <strong>${cost}</strong>.</p> <p><strong>Summary:</strong> ${summary}</p> <p><strong>Full Path:</strong></p> <p style="font-size:0.8rem; word-break:break-all;">${trajectoryString}</p>`; followUps.push({ text: `What conflicts was ${agentName} in?`, queryKey: 'getAllAgentConflicts', params: { agentId } }); if (path.some((cell, i) => i > 0 && cell === path[i - 1])) { followUps.push({ text: `Why did ${agentName} have to wait?`, queryKey: 'explainAgentWait', params: { agentId } }); } break; } case 'getAllAgentConflicts': { const agentNameForConflicts = ui.getAgentDisplayName(params.agentId); content = `<p><strong>${agentNameForConflicts}</strong> was involved in these conflicts (highlighted on grid):</p>`; const processedResults = results.map(r => ({ time: r.timestamp, type: r.type, location: r.locations, with: r.involvedAgents.split(',').map(ui.getAgentDisplayName).join(', ') })); content += ui.createResultsTable(processedResults); results.forEach(conflict => { followUps.push({ text: `How was the conflict at ${conflict.locations} resolved?`, type: 'follow-up', queryKey: 'explainConflictResolutionAndPlanChange', params: { conflictURI: conflict.conflict } }); }); break; } case 'getAllConflictsAtLocation': { content = `<p>The following conflicts occurred at this location (highlighted on grid):</p>`; const processedResults = results.map(r => ({ time: r.timestamp, type: r.type, agents: r.agents.split(',').map(ui.getAgentDisplayName).join(', ') })); content += ui.createResultsTable(processedResults); results.forEach(conflict => { followUps.push({ text: `How was the conflict at T=${conflict.timestamp} resolved?`, type: 'follow-up', queryKey: 'explainConflictResolutionAndPlanChange', params: { conflictURI: conflict.conflict } }); }); break; } case 'explainConflictResolutionAndPlanChange': { const res = results[0]; const pathData = await app.executeSparqlQuery(sparqlQueries.getPathForPlan({ planURI: res.resolvedPlan })); const newPathString = pathData.map(p => `(${p.x},${p.y})`).join(' → '); content = `<p>A conflict occurred at location <strong>${res.locations}</strong>.</p> <p>To resolve the conflict with <strong>${ui.getAgentDisplayName(res.otherAgentName)}</strong>, <strong>${ui.getAgentDisplayName(res.replanningAgentName)}</strong> changed its plan.</p> <p style="font-size:0.9em; word-break:break-all; margin-top: 0.5rem;"><strong>Show new plan:</strong> ${newPathString}</p> <p>This changed the plan cost from <strong>${res.originalCost}</strong> to <strong>${res.newCost}</strong>.</p> <p><strong>Rationale:</strong> Using a <strong>${res.alertType || 'default'}</strong> strategy, ${res.rationale}</p>`; break; } case 'explainAgentWait': { const waits = results.filter(r => r.endTS === r.startTS + 1); if (!waits || waits.length === 0) { content = `<p><strong>${ui.getAgentDisplayName(params.agentId)}</strong> did not have any wait states in its final plan.</p>`; } else { const totalWait = waits.length; const waitInfo = waits[0]; const conflictTime = waitInfo.conflictTS; const waitingAgentName = ui.getAgentDisplayName(params.agentId); content = `<p><strong>${waitingAgentName}</strong> had to wait for a total of <strong>${totalWait}</strong> second(s) in its final plan.</p> <p>This was necessary to avoid a planned conflict with <strong>${ui.getAgentDisplayName(waitInfo.otherAgentName)}</strong> that would have occurred at (${waitInfo.x},${waitInfo.y}) at T=${conflictTime}.</p>`; } break; } case 'getPlanMakespan': { const makespan = results[0].makespan; const costData = await app.executeSparqlQuery(sparqlQueries.getCostByAgent()); const replanData = await app.executeSparqlQuery(sparqlQueries.countReplans()); const sumOfCosts = costData.reduce((sum, row) => sum + parseFloat(row.cost), 0); const replanCount = replanData.length > 0 ? replanData[0].replanCount : 0; content = `<p>Here is a summary of the final joint plan:</p> <p>The overall <strong>makespan</strong> is <strong>${makespan}</strong>.</p> <p>The <strong>sum of individual plan costs</strong> is <strong>${sumOfCosts.toFixed(2)}</strong>.</p> <p>A total of <strong>${replanCount} replans</strong> were required.</p>`; break; } case 'getCostByAgent': { content = `<p>The final plan cost for each agent is as follows:</p>`; const costResults = results.map(r => ({ Agent: ui.getAgentDisplayName(r.agentName), Cost: parseFloat(r.cost).toFixed(2) })); content += ui.createResultsTable(costResults); break; } case 'compareOriginalResolved': { const agentName = ui.getAgentDisplayName(params.agentId); const originalPath = results.filter(r => r.phase === 'Original').map(r => `(${r.x},${r.y})`); const resolvedPath = results.filter(r => r.phase === 'Resolved').map(r => `(${r.x},${r.y})`); const originalCost = parseFloat(results[0].originalCost).toFixed(2); const newCost = parseFloat(results[0].newCost).toFixed(2); const costIncrease = (newCost - originalCost).toFixed(2); content = `<p>Comparison for <strong>${agentName}</strong>:</p> <p>The <strong>original plan</strong> cost was <strong>${originalCost}</strong>.</p> <p>The <strong>new resolved plan</strong> cost is <strong>${newCost}</strong> (increase of <strong>${costIncrease}</strong>).</p> <hr style="margin: 1rem 0; border-color: var(--color-border);"> <p><strong>Original Path:</strong> ${originalPath.join(' → ')}</p> <p><strong>Resolved Path:</strong> ${resolvedPath.join(' → ')}</p>`; break; } case 'findMostCongestedLocations': { content = `<p>The most congested locations are:</p>`; const congestionResults = results.map(r => ({ Location: `(${r.x},${r.y})`, 'Conflict Count': r.conflictCount })); content += ui.createResultsTable(congestionResults); break; } case 'getAgentResolutionHistory': { const agentName = ui.getAgentDisplayName(params.agentId); let explanationHtml = `<p>Here is the step-by-step resolution history for <strong>${agentName}</strong>:</p>`; const allPathData = await app.executeSparqlQuery(sparqlQueries.getPathsForAgentPlans(params)); const pathsByPlan = d3.group(allPathData, d => d.plan); results.sort((a, b) => { if (a.planType === 'Original Plan') return -1; if (b.planType === 'Original Plan') return 1; return a.timestamp - b.timestamp; }); results.forEach((step, index) => { const pathString = (pathsByPlan.get(step.plan) || []).map(p => `(${p.x},${p.y})`).join(' → '); explanationHtml += `<hr style="margin: 0.75rem 0; border-color: var(--color-border);">`; if (step.planType === 'Original Plan') { explanationHtml += `<p><strong>Step 0: Initial Plan</strong><br> The first plan was generated with an initial cost of <strong>${parseFloat(step.planCost).toFixed(2)}</strong>.</p>`; if (pathString) { explanationHtml += `<p style="font-size:0.8rem; word-break:break-all; margin-top: 0.5rem;"><strong>Path:</strong> ${pathString}</p>`; } } else { const prevStep = results[index - 1]; const prevPathId = prevStep.plan; const prevPathString = (pathsByPlan.get(prevPathId) || []).map(p => `(${p.x},${p.y})`).join(' → '); const cost = parseFloat(step.planCost), prevCost = parseFloat(prevStep.planCost), change = cost - prevCost; let costChangeHtml = (change > 0) ? `an increase of <span style="color: #DC2626;">${change.toFixed(2)}</span>` : (change < 0) ? `a decrease of <span style="color: #10B981;">${Math.abs(change).toFixed(2)}</span>` : `no change`; const otherAgents = step.otherAgentName ? step.otherAgentName.split(',').map(name => ui.getAgentDisplayName(name.trim())).join(', ') : ''; const otherAgentDisplay = otherAgents ? ` with <strong>${otherAgents}</strong>` : ''; explanationHtml += `<p><strong>Step ${index}: Replanning Event</strong></p> <p><strong>Conflict Details:</strong> A conflict was detected${otherAgentDisplay} at time <strong>T=${step.timestamp}</strong> in location <strong>(${step.x},${step.y})</strong>.</p> <p><strong>Resulting Plan Change:</strong></p> <ul> <li>The plan cost changed from <strong>${prevCost.toFixed(2)}</strong> to <strong>${cost.toFixed(2)}</strong> (${costChangeHtml}).</li> <li><strong>Old Path:</strong> <span style="font-size:0.8rem; word-break:break-all;">${prevPathString}</span></li> <li><strong>New Path:</strong> <span style="font-size:0.8rem; word-break:break-all;">${pathString}</span></li> </ul> <p style="font-size:0.9em; color: var(--color-text-muted); margin-top: 0.25rem;"> <em>Planner Rationale: "${step.rationale}"</em></p>`; } }); content = explanationHtml; break; } default: { content = `<p>Here is the data I found:</p>`; content += ui.createResultsTable(results); } } } ui.renderChatResponse(question, content, queryKey, results, followUps); };
+
             const ui = {
                 dom: { explanationPanelContainer: document.getElementById('explanationPanelContainer'), explanationPanel: document.getElementById('explanationPanel'), explanationPanelTitle: document.getElementById('explanationPanelTitle'), agentSelectorContainer: document.getElementById('agentSelectorContainer'), agentSelect: document.getElementById('agent-select'), selectAgentBtn: document.getElementById('selectAgentBtn'), ttlInput: document.getElementById('ttlInput'), metadataDisplay: document.getElementById('metadataDisplay'), uploadSection: document.getElementById('upload-section'), simControlsContainer: document.getElementById('simControlsContainer'), playPauseBtn: document.getElementById('playPauseBtn'), timeSlider: document.getElementById('timeSlider'), timeLabel: document.getElementById('timeLabel'), sparqlQuery: document.getElementById('sparqlQuery'), sparqlResult: document.getElementById('sparqlResult'), runSparqlBtn: document.getElementById('runSparqlBtn'), gridSvg: d3.select('#gridSvg'), exampleModal: document.getElementById('exampleModal'), exampleGrid: document.getElementById('exampleGrid'), modalOverlay: document.getElementById('modalOverlay'), modalCloseBtn: document.getElementById('modalCloseBtn'), browseExamplesBtn: document.getElementById('browseExamplesBtn'), },
                 getAgentDisplayName(agentId) { if (!agentId || typeof agentId !== 'string') return ''; const name = agentId.includes(':') ? agentId.split(':')[1] : agentId; const parts = name.split('-'); return `Agent ${parts[1] || name}`; },
-                summarizeTrajectory(path) { if (!path || path.length < 2) return 'The agent does not move.'; let summaryParts = []; let i = 0; while (i < path.length - 1) { let currentCell = path[i]; let waitCount = 0; while (i + 1 < path.length && path[i+1] === currentCell) { waitCount++; i++; } if (waitCount > 0) summaryParts.push(`<strong>waits</strong> at ${currentCell} for ${waitCount} step(s)`); if (i + 1 < path.length) summaryParts.push(`<strong>moves</strong> to ${path[i+1]}`); i++; } return `The agent starts at ${path[0]}, then ${summaryParts.join(', then ')}.`; },
+                summarizeTrajectory(path) { if (!path || path.length < 2) return 'The agent does not move.'; let summaryParts = []; let i = 0; while (i < path.length - 1) { let currentCell = path[i]; let waitCount = 0; while (i + 1 < path.length && path[i + 1] === currentCell) { waitCount++; i++; } if (waitCount > 0) summaryParts.push(`<strong>waits</strong> at ${currentCell} for ${waitCount} step(s)`); if (i + 1 < path.length) summaryParts.push(`<strong>moves</strong> to ${path[i + 1]}`); i++; } return `The agent starts at ${path[0]}, then ${summaryParts.join(', then ')}.`; },
                 switchView(viewName) { document.querySelectorAll('.view-switcher button').forEach(btn => btn.classList.toggle('active', btn.dataset.view === viewName)); document.querySelectorAll('.vis-container').forEach(container => container.classList.toggle('active', container.id === viewName)); const showSimControls = viewName === 'grid' && state.gridData; this.dom.simControlsContainer.classList.toggle('hidden', !showSimControls); if (viewName !== 'grid') this.highlightConflicts([]); },
                 displayMetadata() { const { fileName, gridData } = state; this.dom.uploadSection.style.display = 'none'; this.dom.metadataDisplay.innerHTML = `<div><span>File Name:</span> <span>${fileName}</span></div><div><span>Environment:</span> <span>${gridData.environmentId || 'N/A'}</span></div><div><span>Agent Count:</span> <span>${Object.keys(gridData.agents).length}</span></div><div><span>Obstacle Count:</span> <span>${gridData.obstacles.length}</span></div><div><span>Conflict Count:</span> <span>${gridData.conflicts.length}</span></div><div class="data-source-buttons" style="margin-top: 1rem;"><button id="changeFileBtn" class="accent-btn"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 12H1.5a.5.5 0 0 1-.5-.5zm14-7a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 1 0 .708-.708L2.707 5H14.5a.5.5 0 0 0 .5-.5z"/></svg><span>Change File</span></button><button id="exampleBtn" class="browse-examples-btn"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/></svg><span>Examples</span></button></div>`; this.dom.metadataDisplay.style.display = 'flex'; document.getElementById('changeFileBtn').addEventListener('click', () => this.dom.ttlInput.click()); document.getElementById('exampleBtn').addEventListener('click', () => this.openExampleModal()); },
                 createResultsTable(results) { if (!results || !results.length) return ''; const headers = Object.keys(results[0]); const table = document.createElement('table'); table.innerHTML = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>`; const tbody = document.createElement('tbody'); results.forEach(row => { const tr = document.createElement('tr'); headers.forEach(h => { const value = row[h] ?? ''; const td = document.createElement('td'); td.textContent = value; td.title = value; tr.appendChild(td); }); tbody.appendChild(tr); }); table.appendChild(tbody); return `<div style="overflow-x: auto; padding-bottom: 0.5rem;">${table.outerHTML}</div>`; },
@@ -861,9 +1246,9 @@
                 addGoBackButton() { const backBtn = document.createElement('button'); backBtn.className = 'question-btn go-back-btn'; backBtn.textContent = '← Go Back'; backBtn.dataset.type = 'back-to-initial'; this.dom.explanationPanel.appendChild(backBtn); },
                 addQuestionButton(q) { const btn = document.createElement('button'); btn.className = 'question-btn'; btn.textContent = q.text; btn.dataset.type = q.type || 'question'; btn.dataset.queryKey = q.queryKey || ''; btn.dataset.params = JSON.stringify(q.params || {}); this.dom.explanationPanel.appendChild(btn); },
                 renderInitialQuestionList(questions, title, showAgentSelector) { this.dom.explanationPanelTitle.textContent = title; this.dom.agentSelectorContainer.style.display = showAgentSelector ? 'block' : 'none'; this.dom.explanationPanel.innerHTML = ''; questions.forEach(q => this.addQuestionButton(q)); this.dom.explanationPanelContainer.classList.remove('hidden'); },
-                drawGrid() { this.dom.gridSvg.selectAll('*').remove(); if (!state.gridData) return; const { width, height } = document.getElementById('grid').getBoundingClientRect(); const [cols, rows] = state.gridData.gridSize; const padding = 40; const cellSize = Math.max(10, Math.floor(Math.min((width - padding) / cols, (height - padding) / rows))); const gridWidth = cols * cellSize; const gridHeight = rows * cellSize; const g = this.dom.gridSvg.append('g').attr('transform', `translate(${(width - gridWidth) / 2}, ${(height - gridHeight) / 2})`); const cellLayer = g.append('g').attr('id', 'cellLayer'); g.append('g').attr('id', 'conflictHighlightLayer'); const pathLayer = g.append('g').attr('id', 'pathLayer'); const goalLayer = g.append('g').attr('id', 'goalLayer'); const agentLayer = g.append('g').attr('id', 'agentLayer'); for(let i = 0; i < cols; i++) { g.append('text').attr('class', 'grid-label').attr('x', i * cellSize + cellSize/2).attr('y', -10).text(i); } for(let j = 0; j < rows; j++) { g.append('text').attr('class', 'grid-label').attr('x', -10).attr('y', j * cellSize + cellSize/2).text(j); } for (let j = 0; j < rows; j++) { for (let i = 0; i < cols; i++) { cellLayer.append('rect').attr('x', i * cellSize).attr('y', j * cellSize).attr('width', cellSize).attr('height', cellSize).attr('class', 'grid-cell').attr('id', `cell-${i}-${j}`).on('click', () => app.handleCellClick(i, j)); } } cellLayer.selectAll('.obstacle').data(state.gridData.obstacles).enter().append('rect').attr('class', 'obstacle').attr('x', d => d[0] * cellSize).attr('y', d => d[1] * cellSize).attr('width', cellSize).attr('height', cellSize).attr('rx', 4); const conflictLocations = new Set(state.gridData.conflicts.map(c => c.raw_location)); conflictLocations.forEach(locStr => { const [x, y] = locStr.split(','); d3.select(`#cell-${x}-${y}`).classed('conflict-zone', true); }); const line = d3.line().x(d => d.cell[0] * cellSize + cellSize / 2).y(d => d.cell[1] * cellSize + cellSize / 2); Object.entries(state.gridData.agents).forEach(([id, path]) => { const agentPathData = path.map(p => ({cell: p.cell})); pathLayer.append('path').attr('class', 'agent-path').attr('d', line(agentPathData)).style('stroke', config.agentColors(id)); if (path.length > 0) { const goal = path[path.length - 1].cell; goalLayer.append('rect').attr('class', 'agent-start-goal').attr('x', goal[0] * cellSize + 4).attr('y', goal[1] * cellSize + 4).attr('width', cellSize - 8).attr('height', cellSize - 8).attr('rx', 4).style('stroke', config.agentColors(id)); const agentNum = id.split('-').pop(); const start = path[0].cell; const agentGroup = agentLayer.append('g').attr('class', 'agent-group').attr('id', `agent-group-${id}`).attr('transform', `translate(${start[0] * cellSize}, ${start[1] * cellSize})`); agentGroup.append('rect').attr('class', 'agent').attr('width', cellSize - 4).attr('height', cellSize - 4).attr('x', 2).attr('y', 2).attr('rx', 4).style('fill', config.agentColors(id)); agentGroup.append('text').attr('class', 'agent-label').attr('x', cellSize / 2).attr('y', cellSize / 2).attr('font-size', `${Math.max(8, cellSize * 0.5)}px`).text(agentNum); } }); },
-                highlightConflicts(conflictIds) { const highlightLayer = this.dom.gridSvg.select('#conflictHighlightLayer'); highlightLayer.selectAll('*').remove(); if (!state.gridData || conflictIds.length === 0) return; const { width, height } = document.getElementById('grid').getBoundingClientRect(); const [cols, rows] = state.gridData.gridSize; const padding = 40; const cellSize = Math.max(10, Math.floor(Math.min((width - padding) / cols, (height - padding) / rows))); const conflictsToHighlight = state.gridData.conflicts.filter(c => conflictIds.includes(c.id)); conflictsToHighlight.forEach(c => { const [x, y] = c.raw_location.split(','); highlightLayer.append('rect').attr('class', 'dynamic-conflict-highlight vertex').attr('x', x * cellSize + 2).attr('y', y * cellSize + 2).attr('width', cellSize - 4).attr('height', cellSize - 4).attr('rx', 4); }); },
-                updateSimulation(time) { this.dom.timeSlider.value = time; this.dom.timeLabel.textContent = `T=${time}`; if (!state.gridData) return; const { width, height } = document.getElementById('grid').getBoundingClientRect(); const [cols, rows] = state.gridData.gridSize; const padding = 40; const cellSize = Math.max(10, Math.floor(Math.min((width - padding) / cols, (height - padding) / rows))); Object.entries(state.gridData.agents).forEach(([id, path]) => { const agentGroup = d3.select(`#agent-group-${id}`); if (agentGroup.empty() || path.length === 0) return; let currentPos = path[0].cell; for(const step of path) { if (step.time <= time) { currentPos = step.cell; } else { break; } } const goalPos = path[path.length - 1].cell; const atGoal = (currentPos[0] === goalPos[0] && currentPos[1] === goalPos[1]); agentGroup.transition().duration(200).attr('transform', `translate(${currentPos[0] * cellSize}, ${currentPos[1] * cellSize})`).style('opacity', atGoal ? 0.5 : 1.0); }); },
+                drawGrid() { this.dom.gridSvg.selectAll('*').remove(); if (!state.gridData) return; const { width, height } = document.getElementById('grid').getBoundingClientRect(); const [cols, rows] = state.gridData.gridSize; const padding = 40; const cellSize = Math.max(10, Math.floor(Math.min((width - padding) / cols, (height - padding) / rows))); const gridWidth = cols * cellSize; const gridHeight = rows * cellSize; const g = this.dom.gridSvg.append('g').attr('transform', `translate(${(width - gridWidth) / 2}, ${(height - gridHeight) / 2})`); const cellLayer = g.append('g').attr('id', 'cellLayer'); g.append('g').attr('id', 'conflictHighlightLayer'); const pathLayer = g.append('g').attr('id', 'pathLayer'); const goalLayer = g.append('g').attr('id', 'goalLayer'); const agentLayer = g.append('g').attr('id', 'agentLayer'); for (let i = 0; i < cols; i++) { g.append('text').attr('class', 'grid-label').attr('x', i * cellSize + cellSize / 2).attr('y', -10).text(i); } for (let j = 0; j < rows; j++) { g.append('text').attr('class', 'grid-label').attr('x', -10).attr('y', j * cellSize + cellSize / 2).text(j); } for (let j = 0; j < rows; j++) { for (let i = 0; i < cols; i++) { cellLayer.append('rect').attr('x', i * cellSize).attr('y', j * cellSize).attr('width', cellSize).attr('height', cellSize).attr('class', 'grid-cell').attr('id', `cell-${i}-${j}`).on('click', () => app.handleCellClick(i, j)); } } cellLayer.selectAll('.obstacle').data(state.gridData.obstacles).enter().append('rect').attr('class', 'obstacle').attr('x', d => d[0] * cellSize).attr('y', d => d[1] * cellSize).attr('width', cellSize).attr('height', cellSize).attr('rx', 4); const conflictLocations = new Set(state.gridData.conflicts.map(c => c.raw_location)); conflictLocations.forEach(locStr => { const [row, col] = locStr.split(','); d3.select(`#cell-${col}-${row}`).classed('conflict-zone', true); }); const line = d3.line().x(d => d.cell[0] * cellSize + cellSize / 2).y(d => d.cell[1] * cellSize + cellSize / 2); Object.entries(state.gridData.agents).forEach(([id, path]) => { const agentPathData = path.map(p => ({ cell: p.cell })); pathLayer.append('path').attr('class', 'agent-path').attr('d', line(agentPathData)).style('stroke', config.agentColors(id)); if (path.length > 0) { const goal = path[path.length - 1].cell; goalLayer.append('rect').attr('class', 'agent-start-goal').attr('x', goal[0] * cellSize + 4).attr('y', goal[1] * cellSize + 4).attr('width', cellSize - 8).attr('height', cellSize - 8).attr('rx', 4).style('stroke', config.agentColors(id)); const agentNum = id.split('-').pop(); const start = path[0].cell; const agentGroup = agentLayer.append('g').attr('class', 'agent-group').attr('id', `agent-group-${id}`).attr('transform', `translate(${start[0] * cellSize}, ${start[1] * cellSize})`); agentGroup.append('rect').attr('class', 'agent').attr('width', cellSize - 4).attr('height', cellSize - 4).attr('x', 2).attr('y', 2).attr('rx', 4).style('fill', config.agentColors(id)); agentGroup.append('text').attr('class', 'agent-label').attr('x', cellSize / 2).attr('y', cellSize / 2).attr('font-size', `${Math.max(8, cellSize * 0.5)}px`).text(agentNum); } }); },
+                highlightConflicts(conflictIds) { const highlightLayer = this.dom.gridSvg.select('#conflictHighlightLayer'); highlightLayer.selectAll('*').remove(); if (!state.gridData || conflictIds.length === 0) return; const { width, height } = document.getElementById('grid').getBoundingClientRect(); const [cols, rows] = state.gridData.gridSize; const padding = 40; const cellSize = Math.max(10, Math.floor(Math.min((width - padding) / cols, (height - padding) / rows))); const conflictsToHighlight = state.gridData.conflicts.filter(c => conflictIds.includes(c.id)); conflictsToHighlight.forEach(c => { const [row, col] = c.raw_location.split(','); highlightLayer.append('rect').attr('class', 'dynamic-conflict-highlight vertex').attr('x', col * cellSize + 2).attr('y', row * cellSize + 2).attr('width', cellSize - 4).attr('height', cellSize - 4).attr('rx', 4); }); },
+                updateSimulation(time) { this.dom.timeSlider.value = time; this.dom.timeLabel.textContent = `T=${time}`; if (!state.gridData) return; const { width, height } = document.getElementById('grid').getBoundingClientRect(); const [cols, rows] = state.gridData.gridSize; const padding = 40; const cellSize = Math.max(10, Math.floor(Math.min((width - padding) / cols, (height - padding) / rows))); Object.entries(state.gridData.agents).forEach(([id, path]) => { const agentGroup = d3.select(`#agent-group-${id}`); if (agentGroup.empty() || path.length === 0) return; let currentPos = path[0].cell; for (const step of path) { if (step.time <= time) { currentPos = step.cell; } else { break; } } const goalPos = path[path.length - 1].cell; const atGoal = (currentPos[0] === goalPos[0] && currentPos[1] === goalPos[1]); agentGroup.transition().duration(200).attr('transform', `translate(${currentPos[0] * cellSize}, ${currentPos[1] * cellSize})`).style('opacity', atGoal ? 0.5 : 1.0); }); },
                 toggleAnimation() { if (state.animationInterval) { clearInterval(state.animationInterval); state.animationInterval = null; this.dom.playPauseBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/></svg>`; } else { this.dom.playPauseBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/></svg>`; state.animationInterval = setInterval(() => { let currentTime = parseInt(this.dom.timeSlider.value); currentTime = (currentTime >= parseInt(this.dom.timeSlider.max)) ? 0 : currentTime + 1; this.updateSimulation(currentTime); }, config.animationSpeed); } },
 
                 openExampleModal() {
@@ -905,7 +1290,7 @@
                     document.body.style.overflow = '';
                 }
             };
-        
+
             const app = {
                 async executeSparqlQuery(queryString, displayInTab = false) {
                     if (!state.rdfStore) { const msg = "RDF Data not loaded."; if (displayInTab) ui.dom.sparqlResult.innerHTML = `<p>${msg}</p>`; console.error(msg); return []; }
@@ -932,7 +1317,7 @@
                         return [];
                     }
                 },
-        
+
                 async loadKnowledgeGraph(ttlContent, fileName) {
                     try {
                         ui.dom.metadataDisplay.innerHTML = '<div class="loading">Loading and parsing TTL file...</div>';
@@ -983,7 +1368,7 @@
                         alert(`Error loading example: ${error.message}`);
                     }
                 },
-                
+
                 showInitialExplanationView() {
                     ui.highlightConflicts([]);
                     state.lastInteraction = {};
@@ -1007,7 +1392,7 @@
                     ];
                     ui.renderInitialQuestionList(generalQuestions, "Plan & Agent Analysis", true);
                 },
-                
+
                 showAgentSpecificView() {
                     const agentId = ui.dom.agentSelect.value;
                     const agentName = ui.getAgentDisplayName(agentId);
@@ -1020,18 +1405,20 @@
                     ui.renderInitialQuestionList(agentQuestions, `Analysis for ${agentName}`, false);
                     ui.addGoBackButton();
                 },
-    
+
                 handleCellClick(x, y) {
                     ui.highlightConflicts([]);
                     state.lastInteraction = {};
                     if (!state.gridData) return;
                     const currentTime = parseInt(ui.dom.timeSlider.value);
-                    let agentsAtTime = Object.entries(state.gridData.agents).filter(([, path]) => path.some(step => step.time === currentTime && step.cell[0] === x && step.cell[1] === y)).map(([agentId]) => agentId.split('#').pop());
-                    const content = { agents: agentsAtTime, isObstacle: state.gridData.obstacles.some(obs => obs[0] === x && obs[1] === y), conflicts: state.gridData.conflicts.filter(c => c.raw_location === `${x},${y}`) };
+                    // Note: cell coordinates are stored as [row, col] = [y, x]
+                    let agentsAtTime = Object.entries(state.gridData.agents).filter(([, path]) => path.some(step => step.time === currentTime && step.cell[0] === y && step.cell[1] === x)).map(([agentId]) => agentId.split('#').pop());
+                    // Obstacles and conflicts are stored with row,col format (y,x)
+                    const content = { agents: agentsAtTime, isObstacle: state.gridData.obstacles.some(obs => obs[0] === y && obs[1] === x), conflicts: state.gridData.conflicts.filter(c => c.raw_location === `${y},${x}`) };
                     state.lastInteraction = { type: 'cell_click', x, y, content, time: currentTime };
                     let questions = [];
                     const locationStr = `${x},${y}`;
-                    if (content.isObstacle) questions.push({text: "This is a static obstacle.", isInfo: true});
+                    if (content.isObstacle) questions.push({ text: "This is a static obstacle.", isInfo: true });
                     if (content.agents.length > 0) {
                         content.agents.forEach(agentId => {
                             const agentName = ui.getAgentDisplayName(agentId);
@@ -1042,11 +1429,11 @@
                     if (content.conflicts.length > 0) {
                         questions.push({ text: `List all conflicts at location (${x},${y})`, queryKey: 'getAllConflictsAtLocation', params: { locationStr } });
                     }
-                    if (questions.length === 0 && !content.isObstacle) questions.push({text: "This is an empty cell.", isInfo: true});
+                    if (questions.length === 0 && !content.isObstacle) questions.push({ text: "This is an empty cell.", isInfo: true });
                     ui.renderInitialQuestionList(questions, `Explanation for Cell (${x},${y})`, false);
                     ui.addGoBackButton();
                 },
-        
+
                 async handleQuestionClick(event) {
                     const button = event.target.closest('.question-btn'); if (!button) return;
                     const type = button.dataset.type;
@@ -1062,7 +1449,7 @@
                         await explanationEngine.generateExplanation(questionText, queryKey, results);
                     }
                 },
-        
+
                 init() {
                     document.querySelectorAll('.view-switcher button').forEach(btn => btn.addEventListener('click', () => ui.switchView(btn.dataset.view)));
                     ui.dom.ttlInput.addEventListener('change', (e) => this.handleTtlUpload(e));
@@ -1086,9 +1473,10 @@
                     ui.drawGrid();
                 }
             };
-        
+
             app.init();
         });
     </script>
 </body>
+
 </html>
