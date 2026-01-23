@@ -77,10 +77,18 @@ def integrate(json_path, base_ttl, out_ttl):
             loc_node = create_grid_location(g, MA, ag['goalState']['cell'][0], ag['goalState']['cell'][1])
             g.add((a, MA.hasGoalLocation, loc_node))
 
-    # --- Original Agent SubPlans ---
+    # --- Original and Final Agent SubPlans ---
+    # Distinguish between Original plans (before conflicts) and Final plans (after all resolution)
     for path in data.get('agentPaths', []):
         sp = URIRef(MA + path['subplanId'])
-        g.add((sp, RDF.type, MA.OriginalSubPlan))
+        # Only mark "Plan-Original" as OriginalSubPlan, "Plan-Final" gets FinalSubPlan type
+        if 'Plan-Original' in path['subplanId']:
+            g.add((sp, RDF.type, MA.OriginalSubPlan))
+        elif 'Plan-Final' in path['subplanId']:
+            g.add((sp, RDF.type, MA.FinalSubPlan))
+        else:
+            # Fallback for other naming conventions
+            g.add((sp, RDF.type, MA.OriginalSubPlan))
         g.add((sp, MA.belongsToAgent, URIRef(MA + path['agent'])))
         g.add((sp, MA.hasPlanCost, Literal(path['planCost'], datatype=XSD.decimal)))
         for i, step in enumerate(path.get('steps', [])):
@@ -157,6 +165,9 @@ def integrate(json_path, base_ttl, out_ttl):
         g.add((strat_node, RDF.type, MA.ReplanningStrategy))
         if 'triggeredBy' in strategy:
             g.add((strat_node, MA.triggeredBy, URIRef(MA + strategy['triggeredBy'])))
+        # Add strategy type (e.g., "Static Obstacle Avoidance", "Dynamic Obstacle Avoidance", "GeneralYield")
+        if 'type' in strategy:
+            g.add((strat_node, MA.strategyID, Literal(strategy['type'])))
 
     for alert in data.get('conflictAlerts', []):
         aNode = URIRef(MA + alert['id'])
@@ -165,6 +176,9 @@ def integrate(json_path, base_ttl, out_ttl):
         g.add((aNode, MA.targetAgent, URIRef(MA + alert['targetAgent'])))
         if 'rationale' in alert:
             g.add((aNode, MA.selectionRationale, Literal(alert['rationale'])))
+        # Add alert type (e.g., "staticReplan", "dynamicReplan", "generalYield", "yieldOnStart", "yieldOnGoal", "jointAstar")
+        if 'alertType' in alert:
+            g.add((aNode, MA.alertType, Literal(alert['alertType'])))
 
     if 'jointPlan' in data:
         jp_data = data['jointPlan']
