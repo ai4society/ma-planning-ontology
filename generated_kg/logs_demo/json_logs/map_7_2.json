@@ -1,0 +1,3547 @@
+{
+  "info_sharing": {
+    "initialSubmissionIU": 66,
+    "revisedSubmissionIU": 96,
+    "conflictAlertIU": 0,
+    "alertDetailsIU": {
+      "static": 0,
+      "dynamic": 0
+    },
+    "jointAStarIU": 0,
+    "parkingRejectedIU": 92,
+    "totalInformationLoadIU": 254
+  },
+  "passes": 6,
+  "time": 0.067596875,
+  "final_collisions": 0,
+  "collisionEvents": [
+    {
+      "id": "Collision-5-(5,5)",
+      "time": 5,
+      "type": "vertex",
+      "location": [
+        5,
+        5
+      ],
+      "agents": [
+        "Robot-1",
+        "Robot-7"
+      ]
+    },
+    {
+      "id": "Collision-5-((5,5),(6,5))",
+      "time": 5,
+      "type": "edge",
+      "location": [
+        [
+          5,
+          5
+        ],
+        [
+          6,
+          5
+        ]
+      ],
+      "agents": [
+        "Robot-5",
+        "Robot-7"
+      ]
+    },
+    {
+      "id": "Collision-7-((6,5),(5,5))",
+      "time": 7,
+      "type": "edge",
+      "location": [
+        [
+          6,
+          5
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "agents": [
+        "Robot-3",
+        "Robot-4"
+      ]
+    },
+    {
+      "id": "Collision-12-((5,5),(4,5))",
+      "time": 12,
+      "type": "edge",
+      "location": [
+        [
+          5,
+          5
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "agents": [
+        "Robot-3",
+        "Robot-5"
+      ]
+    },
+    {
+      "id": "Collision-29-(7,7)",
+      "time": 29,
+      "type": "vertex",
+      "location": [
+        7,
+        7
+      ],
+      "agents": [
+        "Robot-1",
+        "Robot-5"
+      ]
+    }
+  ],
+  "conflictAlerts": [
+    {
+      "id": "Alert-1",
+      "alertsConflict": "Collision-5-((5,5),(6,5))",
+      "targetAgent": "Robot-5",
+      "alertType": "generalYield",
+      "rationale": "Active agent yielding to resolve deadlock."
+    },
+    {
+      "id": "Alert-2",
+      "alertsConflict": "Collision-7-((6,5),(5,5))",
+      "targetAgent": "Robot-3",
+      "alertType": "generalYield",
+      "rationale": "Active agent yielding to resolve deadlock."
+    },
+    {
+      "id": "Alert-3",
+      "alertsConflict": "Collision-12-((5,5),(4,5))",
+      "targetAgent": "Robot-5",
+      "alertType": "generalYield",
+      "rationale": "Active agent yielding to resolve deadlock."
+    },
+    {
+      "id": "Alert-4",
+      "alertsConflict": "Collision-29-(7,7)",
+      "targetAgent": "Robot-5",
+      "alertType": "yieldOnGoal",
+      "rationale": "Agent yielding from goal position to resolve collision."
+    }
+  ],
+  "replanningStrategies": [
+    {
+      "id": "Strategy-1",
+      "triggeredBy": "Alert-1",
+      "type": "GeneralYield"
+    },
+    {
+      "id": "Strategy-2",
+      "triggeredBy": "Alert-2",
+      "type": "GeneralYield"
+    },
+    {
+      "id": "Strategy-3",
+      "triggeredBy": "Alert-3",
+      "type": "GeneralYield"
+    },
+    {
+      "id": "Strategy-4",
+      "triggeredBy": "Alert-4",
+      "type": "YieldOnGoal"
+    }
+  ],
+  "agentSubplans": [
+    {
+      "id": "Robot-5-Plan-Resolved-1",
+      "belongsToAgent": "Robot-5",
+      "derivedFromConflict": "Collision-5-((5,5),(6,5))",
+      "generatedBy": "Strategy-1",
+      "planCost": 18,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            5,
+            1
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            5,
+            2
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            5,
+            3
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            5,
+            4
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 11,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 12,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 13,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 14,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 15,
+          "cell": [
+            7,
+            6
+          ]
+        },
+        {
+          "time": 16,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 17,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 18,
+          "cell": [
+            7,
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Robot-3-Plan-Resolved-2",
+      "belongsToAgent": "Robot-3",
+      "derivedFromConflict": "Collision-7-((6,5),(5,5))",
+      "generatedBy": "Strategy-2",
+      "planCost": 20,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            8,
+            1
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            7,
+            1
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            7,
+            2
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            7,
+            3
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            7,
+            4
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            7,
+            4
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 11,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 12,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 13,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 14,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 15,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 16,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 17,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 18,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 19,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 20,
+          "cell": [
+            2,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Robot-5-Plan-Resolved-3",
+      "belongsToAgent": "Robot-5",
+      "derivedFromConflict": "Collision-12-((5,5),(4,5))",
+      "generatedBy": "Strategy-3",
+      "planCost": 22,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            5,
+            1
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            5,
+            2
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            5,
+            3
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            5,
+            4
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 11,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 12,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 13,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 14,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 15,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 16,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 17,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 18,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 19,
+          "cell": [
+            7,
+            6
+          ]
+        },
+        {
+          "time": 20,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 21,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 22,
+          "cell": [
+            7,
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Robot-5-Plan-Resolved-4",
+      "belongsToAgent": "Robot-5",
+      "derivedFromConflict": "Collision-29-(7,7)",
+      "generatedBy": "Strategy-4",
+      "planCost": 32,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            5,
+            1
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            5,
+            2
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            5,
+            3
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            5,
+            4
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 11,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 12,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 13,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 14,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 15,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 16,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 17,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 18,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 19,
+          "cell": [
+            7,
+            6
+          ]
+        },
+        {
+          "time": 20,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 21,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 22,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 23,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 24,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 25,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 26,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 27,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 28,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 29,
+          "cell": [
+            6,
+            7
+          ]
+        },
+        {
+          "time": 30,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 31,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 32,
+          "cell": [
+            7,
+            7
+          ]
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "id": "map_7_2",
+    "gridSize": [
+      11,
+      11
+    ],
+    "obstacles": [
+      {
+        "id": "Obs-0-0",
+        "cell": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "Obs-0-1",
+        "cell": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "Obs-0-2",
+        "cell": [
+          0,
+          2
+        ]
+      },
+      {
+        "id": "Obs-0-3",
+        "cell": [
+          0,
+          3
+        ]
+      },
+      {
+        "id": "Obs-0-4",
+        "cell": [
+          0,
+          4
+        ]
+      },
+      {
+        "id": "Obs-0-5",
+        "cell": [
+          0,
+          5
+        ]
+      },
+      {
+        "id": "Obs-0-6",
+        "cell": [
+          0,
+          6
+        ]
+      },
+      {
+        "id": "Obs-0-7",
+        "cell": [
+          0,
+          7
+        ]
+      },
+      {
+        "id": "Obs-0-8",
+        "cell": [
+          0,
+          8
+        ]
+      },
+      {
+        "id": "Obs-0-9",
+        "cell": [
+          0,
+          9
+        ]
+      },
+      {
+        "id": "Obs-0-10",
+        "cell": [
+          0,
+          10
+        ]
+      },
+      {
+        "id": "Obs-1-0",
+        "cell": [
+          1,
+          0
+        ]
+      },
+      {
+        "id": "Obs-1-8",
+        "cell": [
+          1,
+          8
+        ]
+      },
+      {
+        "id": "Obs-1-10",
+        "cell": [
+          1,
+          10
+        ]
+      },
+      {
+        "id": "Obs-2-0",
+        "cell": [
+          2,
+          0
+        ]
+      },
+      {
+        "id": "Obs-2-4",
+        "cell": [
+          2,
+          4
+        ]
+      },
+      {
+        "id": "Obs-2-8",
+        "cell": [
+          2,
+          8
+        ]
+      },
+      {
+        "id": "Obs-2-10",
+        "cell": [
+          2,
+          10
+        ]
+      },
+      {
+        "id": "Obs-3-0",
+        "cell": [
+          3,
+          0
+        ]
+      },
+      {
+        "id": "Obs-3-8",
+        "cell": [
+          3,
+          8
+        ]
+      },
+      {
+        "id": "Obs-3-10",
+        "cell": [
+          3,
+          10
+        ]
+      },
+      {
+        "id": "Obs-4-0",
+        "cell": [
+          4,
+          0
+        ]
+      },
+      {
+        "id": "Obs-4-6",
+        "cell": [
+          4,
+          6
+        ]
+      },
+      {
+        "id": "Obs-4-7",
+        "cell": [
+          4,
+          7
+        ]
+      },
+      {
+        "id": "Obs-4-8",
+        "cell": [
+          4,
+          8
+        ]
+      },
+      {
+        "id": "Obs-4-10",
+        "cell": [
+          4,
+          10
+        ]
+      },
+      {
+        "id": "Obs-5-0",
+        "cell": [
+          5,
+          0
+        ]
+      },
+      {
+        "id": "Obs-5-6",
+        "cell": [
+          5,
+          6
+        ]
+      },
+      {
+        "id": "Obs-5-10",
+        "cell": [
+          5,
+          10
+        ]
+      },
+      {
+        "id": "Obs-6-0",
+        "cell": [
+          6,
+          0
+        ]
+      },
+      {
+        "id": "Obs-6-1",
+        "cell": [
+          6,
+          1
+        ]
+      },
+      {
+        "id": "Obs-6-2",
+        "cell": [
+          6,
+          2
+        ]
+      },
+      {
+        "id": "Obs-6-3",
+        "cell": [
+          6,
+          3
+        ]
+      },
+      {
+        "id": "Obs-6-4",
+        "cell": [
+          6,
+          4
+        ]
+      },
+      {
+        "id": "Obs-6-6",
+        "cell": [
+          6,
+          6
+        ]
+      },
+      {
+        "id": "Obs-6-10",
+        "cell": [
+          6,
+          10
+        ]
+      },
+      {
+        "id": "Obs-7-0",
+        "cell": [
+          7,
+          0
+        ]
+      },
+      {
+        "id": "Obs-7-10",
+        "cell": [
+          7,
+          10
+        ]
+      },
+      {
+        "id": "Obs-8-0",
+        "cell": [
+          8,
+          0
+        ]
+      },
+      {
+        "id": "Obs-8-2",
+        "cell": [
+          8,
+          2
+        ]
+      },
+      {
+        "id": "Obs-8-4",
+        "cell": [
+          8,
+          4
+        ]
+      },
+      {
+        "id": "Obs-8-8",
+        "cell": [
+          8,
+          8
+        ]
+      },
+      {
+        "id": "Obs-8-10",
+        "cell": [
+          8,
+          10
+        ]
+      },
+      {
+        "id": "Obs-9-0",
+        "cell": [
+          9,
+          0
+        ]
+      },
+      {
+        "id": "Obs-9-2",
+        "cell": [
+          9,
+          2
+        ]
+      },
+      {
+        "id": "Obs-9-10",
+        "cell": [
+          9,
+          10
+        ]
+      },
+      {
+        "id": "Obs-10-0",
+        "cell": [
+          10,
+          0
+        ]
+      },
+      {
+        "id": "Obs-10-1",
+        "cell": [
+          10,
+          1
+        ]
+      },
+      {
+        "id": "Obs-10-2",
+        "cell": [
+          10,
+          2
+        ]
+      },
+      {
+        "id": "Obs-10-3",
+        "cell": [
+          10,
+          3
+        ]
+      },
+      {
+        "id": "Obs-10-4",
+        "cell": [
+          10,
+          4
+        ]
+      },
+      {
+        "id": "Obs-10-5",
+        "cell": [
+          10,
+          5
+        ]
+      },
+      {
+        "id": "Obs-10-6",
+        "cell": [
+          10,
+          6
+        ]
+      },
+      {
+        "id": "Obs-10-7",
+        "cell": [
+          10,
+          7
+        ]
+      },
+      {
+        "id": "Obs-10-8",
+        "cell": [
+          10,
+          8
+        ]
+      },
+      {
+        "id": "Obs-10-9",
+        "cell": [
+          10,
+          9
+        ]
+      },
+      {
+        "id": "Obs-10-10",
+        "cell": [
+          10,
+          10
+        ]
+      }
+    ]
+  },
+  "agents": [
+    {
+      "id": "Robot-1",
+      "initialState": {
+        "time": 0,
+        "cell": [
+          3,
+          2
+        ]
+      },
+      "goalState": {
+        "cell": [
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "Robot-2",
+      "initialState": {
+        "time": 0,
+        "cell": [
+          3,
+          7
+        ]
+      },
+      "goalState": {
+        "cell": [
+          4,
+          4
+        ]
+      }
+    },
+    {
+      "id": "Robot-3",
+      "initialState": {
+        "time": 0,
+        "cell": [
+          8,
+          1
+        ]
+      },
+      "goalState": {
+        "cell": [
+          2,
+          5
+        ]
+      }
+    },
+    {
+      "id": "Robot-4",
+      "initialState": {
+        "time": 0,
+        "cell": [
+          3,
+          1
+        ]
+      },
+      "goalState": {
+        "cell": [
+          9,
+          5
+        ]
+      }
+    },
+    {
+      "id": "Robot-5",
+      "initialState": {
+        "time": 0,
+        "cell": [
+          5,
+          1
+        ]
+      },
+      "goalState": {
+        "cell": [
+          7,
+          7
+        ]
+      }
+    },
+    {
+      "id": "Robot-6",
+      "initialState": {
+        "time": 0,
+        "cell": [
+          9,
+          3
+        ]
+      },
+      "goalState": {
+        "cell": [
+          8,
+          9
+        ]
+      }
+    },
+    {
+      "id": "Robot-7",
+      "initialState": {
+        "time": 0,
+        "cell": [
+          9,
+          6
+        ]
+      },
+      "goalState": {
+        "cell": [
+          2,
+          3
+        ]
+      }
+    }
+  ],
+  "agentPaths": [
+    {
+      "agent": "Robot-1",
+      "subplanId": "Robot-1-Plan-Original",
+      "planCost": 10,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            4,
+            2
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            5,
+            2
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            5,
+            3
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            5,
+            4
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            7,
+            6
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            7,
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "agent": "Robot-2",
+      "subplanId": "Robot-2-Plan-Original",
+      "planCost": 4,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            3,
+            7
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            4,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "agent": "Robot-3",
+      "subplanId": "Robot-3-Plan-Original",
+      "planCost": 10,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            8,
+            1
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            7,
+            1
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            7,
+            2
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            7,
+            3
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            7,
+            4
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            2,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "agent": "Robot-4",
+      "subplanId": "Robot-4-Plan-Original",
+      "planCost": 10,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            3,
+            1
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            4,
+            1
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            5,
+            1
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            5,
+            2
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            5,
+            3
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            5,
+            4
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            8,
+            5
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            9,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "agent": "Robot-5",
+      "subplanId": "Robot-5-Plan-Original",
+      "planCost": 8,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            5,
+            1
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            5,
+            2
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            5,
+            3
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            5,
+            4
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            7,
+            6
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            7,
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "agent": "Robot-6",
+      "subplanId": "Robot-6-Plan-Original",
+      "planCost": 7,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            9,
+            3
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            9,
+            4
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            9,
+            6
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            9,
+            7
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            9,
+            8
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            9,
+            9
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "agent": "Robot-7",
+      "subplanId": "Robot-7-Plan-Original",
+      "planCost": 10,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            9,
+            6
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            8,
+            6
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            7,
+            6
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            3,
+            4
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            3,
+            3
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "agent": "Robot-1",
+      "subplanId": "Robot-1-Plan-Final",
+      "planCost": 30,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 11,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 12,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 13,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 14,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 15,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 16,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 17,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 18,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 19,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 20,
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "time": 21,
+          "cell": [
+            4,
+            2
+          ]
+        },
+        {
+          "time": 22,
+          "cell": [
+            5,
+            2
+          ]
+        },
+        {
+          "time": 23,
+          "cell": [
+            5,
+            3
+          ]
+        },
+        {
+          "time": 24,
+          "cell": [
+            5,
+            4
+          ]
+        },
+        {
+          "time": 25,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 26,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 27,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 28,
+          "cell": [
+            7,
+            6
+          ]
+        },
+        {
+          "time": 29,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 30,
+          "cell": [
+            7,
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "agent": "Robot-2",
+      "subplanId": "Robot-2-Plan-Final",
+      "planCost": 30,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            3,
+            7
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 11,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 12,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 13,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 14,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 15,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 16,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 17,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 18,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 19,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 20,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 21,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 22,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 23,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 24,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 25,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 26,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 27,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 28,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 29,
+          "cell": [
+            4,
+            4
+          ]
+        },
+        {
+          "time": 30,
+          "cell": [
+            4,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "agent": "Robot-3",
+      "subplanId": "Robot-3-Plan-Final",
+      "planCost": 30,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            8,
+            1
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            7,
+            1
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            7,
+            2
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            7,
+            3
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            7,
+            4
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            7,
+            4
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 11,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 12,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 13,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 14,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 15,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 16,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 17,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 18,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 19,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 20,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 21,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 22,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 23,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 24,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 25,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 26,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 27,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 28,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 29,
+          "cell": [
+            2,
+            5
+          ]
+        },
+        {
+          "time": 30,
+          "cell": [
+            2,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "agent": "Robot-4",
+      "subplanId": "Robot-4-Plan-Final",
+      "planCost": 30,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            3,
+            1
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            4,
+            1
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            5,
+            1
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            5,
+            2
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            5,
+            3
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            5,
+            4
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            8,
+            5
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 11,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 12,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 13,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 14,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 15,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 16,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 17,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 18,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 19,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 20,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 21,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 22,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 23,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 24,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 25,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 26,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 27,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 28,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 29,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 30,
+          "cell": [
+            9,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "agent": "Robot-5",
+      "subplanId": "Robot-5-Plan-Final",
+      "planCost": 30,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            5,
+            1
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            5,
+            2
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            5,
+            3
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            5,
+            4
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 11,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 12,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 13,
+          "cell": [
+            3,
+            6
+          ]
+        },
+        {
+          "time": 14,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 15,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 16,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 17,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 18,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 19,
+          "cell": [
+            7,
+            6
+          ]
+        },
+        {
+          "time": 20,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 21,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 22,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 23,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 24,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 25,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 26,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 27,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 28,
+          "cell": [
+            7,
+            7
+          ]
+        },
+        {
+          "time": 29,
+          "cell": [
+            6,
+            7
+          ]
+        },
+        {
+          "time": 30,
+          "cell": [
+            7,
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "agent": "Robot-6",
+      "subplanId": "Robot-6-Plan-Final",
+      "planCost": 30,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            9,
+            3
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            9,
+            4
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            9,
+            5
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            9,
+            6
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            9,
+            7
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            9,
+            8
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            9,
+            9
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 11,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 12,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 13,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 14,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 15,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 16,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 17,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 18,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 19,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 20,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 21,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 22,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 23,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 24,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 25,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 26,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 27,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 28,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 29,
+          "cell": [
+            8,
+            9
+          ]
+        },
+        {
+          "time": 30,
+          "cell": [
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "agent": "Robot-7",
+      "subplanId": "Robot-7-Plan-Final",
+      "planCost": 30,
+      "steps": [
+        {
+          "time": 0,
+          "cell": [
+            9,
+            6
+          ]
+        },
+        {
+          "time": 1,
+          "cell": [
+            8,
+            6
+          ]
+        },
+        {
+          "time": 2,
+          "cell": [
+            7,
+            6
+          ]
+        },
+        {
+          "time": 3,
+          "cell": [
+            7,
+            5
+          ]
+        },
+        {
+          "time": 4,
+          "cell": [
+            6,
+            5
+          ]
+        },
+        {
+          "time": 5,
+          "cell": [
+            5,
+            5
+          ]
+        },
+        {
+          "time": 6,
+          "cell": [
+            4,
+            5
+          ]
+        },
+        {
+          "time": 7,
+          "cell": [
+            3,
+            5
+          ]
+        },
+        {
+          "time": 8,
+          "cell": [
+            3,
+            4
+          ]
+        },
+        {
+          "time": 9,
+          "cell": [
+            3,
+            3
+          ]
+        },
+        {
+          "time": 10,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 11,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 12,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 13,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 14,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 15,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 16,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 17,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 18,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 19,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 20,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 21,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 22,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 23,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 24,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 25,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 26,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 27,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 28,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 29,
+          "cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "time": 30,
+          "cell": [
+            2,
+            3
+          ]
+        }
+      ]
+    }
+  ],
+  "informationSharingMetrics": {
+    "initialSubmissionIU": 66,
+    "revisedSubmissionIU": 96,
+    "conflictAlertIU": 0,
+    "alertDetailsIU": {
+      "static": 0,
+      "dynamic": 0
+    },
+    "jointAStarIU": 0,
+    "parkingRejectedIU": 92,
+    "totalInformationLoadIU": 254
+  },
+  "jointPlan": {
+    "id": "FinalJointPlan",
+    "subplans": [
+      "Robot-1-Plan-Final",
+      "Robot-2-Plan-Final",
+      "Robot-3-Plan-Final",
+      "Robot-4-Plan-Final",
+      "Robot-5-Plan-Final",
+      "Robot-6-Plan-Final",
+      "Robot-7-Plan-Final"
+    ],
+    "globalMakespan": 31
+  },
+  "metrics": {
+    "makespan": 31,
+    "sumOfCosts": 217,
+    "sumOfCostsTrimmed": 102,
+    "totalTime": 0.067596875,
+    "agentsAtGoal": 7,
+    "initialConflicts": 6,
+    "passes": {
+      "total": 6,
+      "phase1": 4,
+      "phase2": 2,
+      "postCleanup": 0
+    },
+    "strategiesTried": {
+      "yield_on_start": {
+        "attempts": 0,
+        "successes": 0
+      },
+      "yield_on_goal": {
+        "attempts": 1,
+        "successes": 1
+      },
+      "generalized_yield": {
+        "attempts": 4,
+        "successes": 3
+      },
+      "static": {
+        "attempts": 1,
+        "successes": 0
+      },
+      "dynamic": {
+        "attempts": 1,
+        "successes": 0
+      },
+      "joint_astar": {
+        "attempts": 1,
+        "successes": 0
+      },
+      "defer": {
+        "attempts": 1,
+        "successes": 1
+      }
+    },
+    "deferredAgentsCount": 1
+  },
+  "strategyIU": {
+    "yieldIU": 45,
+    "jointAstarIU": 0,
+    "jointAstarCellConflicts": 0,
+    "staticIU": 0,
+    "staticBlockedCellsIU": 0,
+    "staticCollisionCellsIU": 0,
+    "dynamicIU": 0,
+    "resubmissionIU": 0
+  }
+}
