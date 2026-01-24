@@ -1288,7 +1288,7 @@
                 renderInitialQuestionList(questions, title, showAgentSelector) { this.dom.explanationPanelTitle.textContent = title; this.dom.agentSelectorContainer.style.display = showAgentSelector ? 'block' : 'none'; this.dom.explanationPanel.innerHTML = ''; questions.forEach(q => this.addQuestionButton(q)); this.dom.explanationPanelContainer.classList.remove('hidden'); },
                 drawGrid() { this.dom.gridSvg.selectAll('*').remove(); if (!state.gridData) return; const { width, height } = document.getElementById('grid').getBoundingClientRect(); const [cols, rows] = state.gridData.gridSize; const padding = 40; const cellSize = Math.max(10, Math.floor(Math.min((width - padding) / cols, (height - padding) / rows))); const gridWidth = cols * cellSize; const gridHeight = rows * cellSize; const g = this.dom.gridSvg.append('g').attr('transform', `translate(${(width - gridWidth) / 2}, ${(height - gridHeight) / 2})`); const cellLayer = g.append('g').attr('id', 'cellLayer'); g.append('g').attr('id', 'conflictHighlightLayer'); const pathLayer = g.append('g').attr('id', 'pathLayer'); const goalLayer = g.append('g').attr('id', 'goalLayer'); const agentLayer = g.append('g').attr('id', 'agentLayer'); for (let i = 0; i < cols; i++) { g.append('text').attr('class', 'grid-label').attr('x', i * cellSize + cellSize / 2).attr('y', -10).text(i); } for (let j = 0; j < rows; j++) { g.append('text').attr('class', 'grid-label').attr('x', -10).attr('y', j * cellSize + cellSize / 2).text(j); } for (let j = 0; j < rows; j++) { for (let i = 0; i < cols; i++) { cellLayer.append('rect').attr('x', i * cellSize).attr('y', j * cellSize).attr('width', cellSize).attr('height', cellSize).attr('class', 'grid-cell').attr('id', `cell-${i}-${j}`).on('click', () => app.handleCellClick(i, j)); } } cellLayer.selectAll('.obstacle').data(state.gridData.obstacles).enter().append('rect').attr('class', 'obstacle').attr('x', d => d[1] * cellSize).attr('y', d => d[0] * cellSize).attr('width', cellSize).attr('height', cellSize).attr('rx', 4); const conflictLocations = new Set(state.gridData.conflicts.map(c => c.raw_location)); conflictLocations.forEach(locStr => { const [xCoord, yCoord] = locStr.split(','); d3.select(`#cell-${yCoord}-${xCoord}`).classed('conflict-zone', true); }); const line = d3.line().x(d => d.cell[1] * cellSize + cellSize / 2).y(d => d.cell[0] * cellSize + cellSize / 2); Object.entries(state.gridData.agents).forEach(([id, path]) => { const agentPathData = path.map(p => ({ cell: p.cell })); pathLayer.append('path').attr('class', 'agent-path').attr('d', line(agentPathData)).style('stroke', config.agentColors(id)); if (path.length > 0) { const goal = path[path.length - 1].cell; goalLayer.append('rect').attr('class', 'agent-start-goal').attr('x', goal[1] * cellSize + 4).attr('y', goal[0] * cellSize + 4).attr('width', cellSize - 8).attr('height', cellSize - 8).attr('rx', 4).style('stroke', config.agentColors(id)); const agentNum = id.split('-').pop(); const start = path[0].cell; const agentGroup = agentLayer.append('g').attr('class', 'agent-group').attr('id', `agent-group-${id}`).attr('transform', `translate(${start[1] * cellSize}, ${start[0] * cellSize})`); agentGroup.append('rect').attr('class', 'agent').attr('width', cellSize - 4).attr('height', cellSize - 4).attr('x', 2).attr('y', 2).attr('rx', 4).style('fill', config.agentColors(id)); agentGroup.append('text').attr('class', 'agent-label').attr('x', cellSize / 2).attr('y', cellSize / 2).attr('font-size', `${Math.max(8, cellSize * 0.5)}px`).text(agentNum); } }); },
                 highlightConflicts(conflictIds) { const highlightLayer = this.dom.gridSvg.select('#conflictHighlightLayer'); highlightLayer.selectAll('*').remove(); if (!state.gridData || conflictIds.length === 0) return; const { width, height } = document.getElementById('grid').getBoundingClientRect(); const [cols, rows] = state.gridData.gridSize; const padding = 40; const cellSize = Math.max(10, Math.floor(Math.min((width - padding) / cols, (height - padding) / rows))); const conflictsToHighlight = state.gridData.conflicts.filter(c => conflictIds.includes(c.id)); conflictsToHighlight.forEach(c => { const [xCoord, yCoord] = c.raw_location.split(','); highlightLayer.append('rect').attr('class', 'dynamic-conflict-highlight vertex').attr('x', yCoord * cellSize + 2).attr('y', xCoord * cellSize + 2).attr('width', cellSize - 4).attr('height', cellSize - 4).attr('rx', 4); }); },
-                updateSimulation(time, prevTime = null) {
+                updateSimulation(time) {
                     this.dom.timeSlider.value = time;
                     this.dom.timeLabel.textContent = `T=${time}`;
                     if (!state.gridData) return;
@@ -1297,12 +1297,6 @@
                     const [cols, rows] = state.gridData.gridSize;
                     const padding = 40;
                     const cellSize = Math.max(10, Math.floor(Math.min((width - padding) / cols, (height - padding) / rows)));
-
-                    // Get speed settings from slider
-                    const sliderValue = parseInt(document.getElementById('speedSlider')?.value || 2);
-                    const speedSettings = this.getSpeedSettings(sliderValue);
-                    // Transition must complete before next step - use 80% of delay
-                    const transitionDuration = speedSettings.delay * 0.8;
 
                     Object.entries(state.gridData.agents).forEach(([id, path]) => {
                         const agentGroup = d3.select(`#agent-group-${id}`);
@@ -1321,17 +1315,11 @@
                         const goalPos = path[path.length - 1].cell;
                         const atGoal = (currentPos[0] === goalPos[0] && currentPos[1] === goalPos[1]);
 
-                        // Calculate target position
+                        // Simple instant position update
                         const newX = currentPos[1] * cellSize;
                         const newY = currentPos[0] * cellSize;
 
-                        // Interrupt any ongoing transition and start fresh
-                        agentGroup.interrupt();
-
                         agentGroup
-                            .transition()
-                            .duration(transitionDuration)
-                            .ease(d3.easeLinear)
                             .attr('transform', `translate(${newX}, ${newY})`)
                             .style('opacity', atGoal ? 0.5 : 1.0);
                     });
@@ -1348,9 +1336,9 @@
                         const runAnimation = () => {
                             const sliderValue = parseInt(document.getElementById('speedSlider')?.value || 2);
                             const speedSettings = this.getSpeedSettings(sliderValue);
-                            let prevTime = parseInt(this.dom.timeSlider.value);
-                            let currentTime = (prevTime >= parseInt(this.dom.timeSlider.max)) ? 0 : prevTime + 1;
-                            this.updateSimulation(currentTime, prevTime);
+                            let currentTime = parseInt(this.dom.timeSlider.value);
+                            currentTime = (currentTime >= parseInt(this.dom.timeSlider.max)) ? 0 : currentTime + 1;
+                            this.updateSimulation(currentTime);
 
                             // Schedule next frame with dynamic speed
                             if (state.animationInterval) {
