@@ -436,25 +436,8 @@
         }
 
         .agent-group {
-            /* Smooth organic movement with custom easing */
-            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease-in-out;
-        }
-
-        .agent-group.moving {
-            /* Add subtle scale effect during movement */
-            animation: agentPulse 0.3s ease-in-out;
-        }
-
-        @keyframes agentPulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.05);
-            }
+            /* Clean, smooth movement with linear transition */
+            transition: transform 0.35s linear, opacity 0.3s ease-out;
         }
 
         .agent {
@@ -1317,14 +1300,13 @@
 
                     // Calculate transition duration based on speed slider
                     const speedValue = parseInt(document.getElementById('speedSlider')?.value || 800);
-                    const transitionDuration = Math.min(speedValue * 0.5, 600);
+                    const transitionDuration = Math.min(speedValue * 0.4, 500);
 
                     Object.entries(state.gridData.agents).forEach(([id, path]) => {
                         const agentGroup = d3.select(`#agent-group-${id}`);
                         if (agentGroup.empty() || path.length === 0) return;
 
                         let currentPos = path[0].cell;
-                        let prevPos = path[0].cell;
 
                         for (const step of path) {
                             if (step.time <= time) {
@@ -1334,53 +1316,19 @@
                             }
                         }
 
-                        // Find previous position for movement detection
-                        if (prevTime !== null) {
-                            for (const step of path) {
-                                if (step.time <= prevTime) {
-                                    prevPos = step.cell;
-                                } else {
-                                    break;
-                                }
-                            }
-                        }
-
                         const goalPos = path[path.length - 1].cell;
                         const atGoal = (currentPos[0] === goalPos[0] && currentPos[1] === goalPos[1]);
-                        const isMoving = prevPos[0] !== currentPos[0] || prevPos[1] !== currentPos[1];
 
-                        // Apply smooth transition with custom easing
-                        const transition = agentGroup
-                            .transition()
-                            .duration(transitionDuration)
-                            .ease(d3.easeCubicOut);  // Smooth deceleration
-
-                        // Calculate the new position
+                        // Clean, simple linear transition
                         const newX = currentPos[1] * cellSize;
                         const newY = currentPos[0] * cellSize;
 
-                        if (isMoving) {
-                            // Add subtle scale effect during movement
-                            transition
-                                .attr('transform', `translate(${newX}, ${newY})`)
-                                .style('opacity', atGoal ? 0.5 : 1.0)
-                                .on('start', function () {
-                                    // Add a subtle scale pulse at start
-                                    d3.select(this).select('.agent')
-                                        .transition()
-                                        .duration(transitionDuration * 0.3)
-                                        .attr('transform', 'scale(1.08)')
-                                        .transition()
-                                        .duration(transitionDuration * 0.7)
-                                        .ease(d3.easeElasticOut.amplitude(1).period(0.5))
-                                        .attr('transform', 'scale(1)');
-                                });
-                        } else {
-                            // Standard smooth transition for waiting
-                            transition
-                                .attr('transform', `translate(${newX}, ${newY})`)
-                                .style('opacity', atGoal ? 0.5 : 1.0);
-                        }
+                        agentGroup
+                            .transition()
+                            .duration(transitionDuration)
+                            .ease(d3.easeLinear)  // Clean linear movement
+                            .attr('transform', `translate(${newX}, ${newY})`)
+                            .style('opacity', atGoal ? 0.5 : 1.0);
                     });
                 },
 
