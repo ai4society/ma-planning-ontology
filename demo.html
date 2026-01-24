@@ -1136,9 +1136,10 @@
             const sparqlQueries = {
                 getAgentFinalPlan: ({ agentId }) => ` SELECT ?cost ?timestamp ?x ?y ?conflict WHERE { ma:FinalJointPlan ma:composedOfSubPlans ?plan . ?plan ma:belongsToAgent ma:${agentId} ; ma:hasPlanCost ?cost . ?plan ma:planData ?segment . ?segment ma:hasValidTime/time:hasBeginning/time:inXSDDateTimeStamp ?timestamp ; ma:hasPathSequence/rdf:rest*/rdf:first ?cellNode . ?cellNode ma:xCoordinate ?x ; ma:yCoordinate ?y . OPTIONAL { ?conflict ma:conflictLocation ?cellNode ; ma:involvesAgentsEvent ma:${agentId} ; ma:occursAtTime/time:inXSDDateTimeStamp ?timestamp . } } ORDER BY ASC(?timestamp) `,
 
-                // Query conflicts at a specific grid location (x=column, y=row)
+                // Query conflicts at a specific grid location (x=column, y=row from display)
+                // RDF stores xCoordinate=row, yCoordinate=column, so we swap them
                 getAllConflictsAtLocation: ({ locationStr }) => {
-                    const [x, y] = locationStr.split(',');
+                    const [col, row] = locationStr.split(',');
                     return `
                         SELECT ?conflict ?timestamp ?type (GROUP_CONCAT(DISTINCT STRAFTER(STR(?agent), "#"); separator=", ") AS ?agents) 
                         WHERE {
@@ -1147,7 +1148,7 @@
                                       ma:occursAtTime/time:inXSDDateTimeStamp ?timestamp ; 
                                       ma:conflictTypeEvent ?type ; 
                                       ma:involvesAgentsEvent ?agent .
-                            ?locNode ma:xCoordinate ${x} ; ma:yCoordinate ${y} .
+                            ?locNode ma:xCoordinate ${row} ; ma:yCoordinate ${col} .
                         } GROUP BY ?conflict ?timestamp ?type ORDER BY ?timestamp
                     `;
                 },
