@@ -8,5 +8,5 @@
 	 prov:wasAttributedTo :agent1;
 	 prov:wasAttributedTo <https://github.com/dgarijo/Widoco/>,<http://www.essepuntato.it/lode/>;
 .
-:agent0 a prov:Agent; foaf:name "Bharath Muppasani".
+:agent0 a prov:Agent; foaf:name "Bharath Muppasani, Ritirupa Dey, Biplav Srivastava, Vignesh Narayanan".
 :agent1 a prov:Agent; foaf:name "This ontology extends the base Planning Ontology available at https://ai4society.github.io/planning-ontology#".

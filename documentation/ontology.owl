@@ -17,9 +17,9 @@
         <owl:imports rdf:resource="http://www.w3.org/ns/prov#"/>
         <owl:imports rdf:resource="http://www.w3.org/ns/sosa/"/>
         <terms:contributor>This ontology extends the base Planning Ontology available at https://ai4society.github.io/planning-ontology#</terms:contributor>
-        <terms:creator>Bharath Muppasani</terms:creator>
+        <terms:creator>Bharath Muppasani, Ritirupa Dey, Biplav Srivastava, Vignesh Narayanan</terms:creator>
         <terms:description xml:lang="en">An ontology for representing knowledge in Multi-Agent Path Finding (MAPF) problems. This ontology defines concepts such as agents, plans, conflicts, and replanning strategies to support explainable AI in MAPF.</terms:description>
-        <terms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-07-22</terms:issued>
+        <terms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-07-22</terms:issued>
         <terms:license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
         <terms:title>Multi-Agent Planning Ontology</terms:title>
         <vann:preferredNamespaceUri>https://purl.org/ai4s/ontology/planning/multi-agent#</vann:preferredNamespaceUri>
