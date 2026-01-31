@@ -4,6 +4,8 @@ Planning Ontology extension for Multi-Agent Path Finding
 
 Explainable MAPF Dashboard – [https://ai4society.github.io/ma-planning-ontology/](https://ai4society.github.io/ma-planning-ontology/)
 
+PURL - [https://purl.org/ai4s/ontology/planning/multi-agent](https://purl.org/ai4s/ontology/planning/multi-agent)
+
 ---
 
 ## Requirements
