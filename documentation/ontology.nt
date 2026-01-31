@@ -4,7 +4,10 @@
 <https://purl.org/ai4s/ontology/planning/multi-agent> <http://www.w3.org/2002/07/owl#imports> <http://www.w3.org/ns/prov#> .
 <https://purl.org/ai4s/ontology/planning/multi-agent> <http://www.w3.org/2002/07/owl#imports> <http://www.w3.org/ns/sosa/> .
 <https://purl.org/ai4s/ontology/planning/multi-agent> <http://purl.org/dc/terms/contributor> "This ontology extends the base Planning Ontology available at https://ai4society.github.io/planning-ontology#" .
-<https://purl.org/ai4s/ontology/planning/multi-agent> <http://purl.org/dc/terms/creator> "Bharath Muppasani, Ritirupa Dey, Biplav Srivastava, Vignesh Narayanan" .
+<https://purl.org/ai4s/ontology/planning/multi-agent> <http://purl.org/dc/terms/creator> "Bharath Muppasani" .
+<https://purl.org/ai4s/ontology/planning/multi-agent> <http://purl.org/dc/terms/creator> "Biplav Srivastava" .
+<https://purl.org/ai4s/ontology/planning/multi-agent> <http://purl.org/dc/terms/creator> "Ritirupa Dey" .
+<https://purl.org/ai4s/ontology/planning/multi-agent> <http://purl.org/dc/terms/creator> "Vignesh Narayanan" .
 <https://purl.org/ai4s/ontology/planning/multi-agent> <http://purl.org/dc/terms/description> "An ontology for representing knowledge in Multi-Agent Path Finding (MAPF) problems. This ontology defines concepts such as agents, plans, conflicts, and replanning strategies to support explainable AI in MAPF."@en .
 <https://purl.org/ai4s/ontology/planning/multi-agent> <http://purl.org/dc/terms/issued> "2025-07-22"^^<http://www.w3.org/2001/XMLSchema#date> .
 <https://purl.org/ai4s/ontology/planning/multi-agent> <http://purl.org/dc/terms/license> <http://creativecommons.org/licenses/by/4.0/> .

@@ -12,7 +12,10 @@
                                                                    <http://www.w3.org/ns/prov#> ,
                                                                    <http://www.w3.org/ns/sosa/> ;
                                                        <http://purl.org/dc/terms/contributor> "This ontology extends the base Planning Ontology available at https://ai4society.github.io/planning-ontology#" ;
-                                                       <http://purl.org/dc/terms/creator> "Bharath Muppasani, Ritirupa Dey, Biplav Srivastava, Vignesh Narayanan" ;
+                                                       <http://purl.org/dc/terms/creator> "Bharath Muppasani" ,
+                                                                                          "Biplav Srivastava" ,
+                                                                                          "Ritirupa Dey" ,
+                                                                                          "Vignesh Narayanan" ;
                                                        <http://purl.org/dc/terms/description> "An ontology for representing knowledge in Multi-Agent Path Finding (MAPF) problems. This ontology defines concepts such as agents, plans, conflicts, and replanning strategies to support explainable AI in MAPF."@en ;
                                                        <http://purl.org/dc/terms/issued> "2025-07-22"^^xsd:date ;
                                                        <http://purl.org/dc/terms/license> <http://creativecommons.org/licenses/by/4.0/> ;

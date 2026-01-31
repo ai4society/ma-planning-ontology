@@ -6,7 +6,13 @@
 	 dc:title "Multi-Agent Planning Ontology";
 	 prov:wasAttributedTo :agent0;
 	 prov:wasAttributedTo :agent1;
+	 prov:wasAttributedTo :agent2;
+	 prov:wasAttributedTo :agent3;
+	 prov:wasAttributedTo :agent4;
 	 prov:wasAttributedTo <https://github.com/dgarijo/Widoco/>,<http://www.essepuntato.it/lode/>;
 .
-:agent0 a prov:Agent; foaf:name "Bharath Muppasani, Ritirupa Dey, Biplav Srivastava, Vignesh Narayanan".
-:agent1 a prov:Agent; foaf:name "This ontology extends the base Planning Ontology available at https://ai4society.github.io/planning-ontology#".
+:agent0 a prov:Agent; foaf:name "Bharath Muppasani".
+:agent1 a prov:Agent; foaf:name "Biplav Srivastava".
+:agent2 a prov:Agent; foaf:name "Ritirupa Dey".
+:agent3 a prov:Agent; foaf:name "Vignesh Narayanan".
+:agent4 a prov:Agent; foaf:name "This ontology extends the base Planning Ontology available at https://ai4society.github.io/planning-ontology#".

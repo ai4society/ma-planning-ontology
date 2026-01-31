@@ -50,7 +50,13 @@
     "@value" : "This ontology extends the base Planning Ontology available at https://ai4society.github.io/planning-ontology#"
   } ],
   "http://purl.org/dc/terms/creator" : [ {
-    "@value" : "Bharath Muppasani, Ritirupa Dey, Biplav Srivastava, Vignesh Narayanan"
+    "@value" : "Bharath Muppasani"
+  }, {
+    "@value" : "Biplav Srivastava"
+  }, {
+    "@value" : "Ritirupa Dey"
+  }, {
+    "@value" : "Vignesh Narayanan"
   } ],
   "http://purl.org/dc/terms/description" : [ {
     "@language" : "en",
