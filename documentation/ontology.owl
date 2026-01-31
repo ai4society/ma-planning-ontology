@@ -26,6 +26,7 @@
         <terms:license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
         <terms:title>Multi-Agent Planning Ontology</terms:title>
         <vann:preferredNamespaceUri>https://purl.org/ai4s/ontology/planning/multi-agent#</vann:preferredNamespaceUri>
+        <owl:versionInfo>1.0.0</owl:versionInfo>
     </owl:Ontology>
     
 

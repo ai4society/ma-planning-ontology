@@ -84,6 +84,9 @@
   } ],
   "http://www.w3.org/2002/07/owl#versionIRI" : [ {
     "@id" : "https://purl.org/ai4s/ontology/planning/multi-agent/v1.0.0"
+  } ],
+  "http://www.w3.org/2002/07/owl#versionInfo" : [ {
+    "@value" : "1.0.0"
   } ]
 }, {
   "@id" : "https://purl.org/ai4s/ontology/planning/multi-agent#Agent",

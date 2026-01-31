@@ -13,6 +13,7 @@
 <https://purl.org/ai4s/ontology/planning/multi-agent> <http://purl.org/dc/terms/license> <http://creativecommons.org/licenses/by/4.0/> .
 <https://purl.org/ai4s/ontology/planning/multi-agent> <http://purl.org/dc/terms/title> "Multi-Agent Planning Ontology" .
 <https://purl.org/ai4s/ontology/planning/multi-agent> <http://purl.org/vocab/vann/preferredNamespaceUri> "https://purl.org/ai4s/ontology/planning/multi-agent#" .
+<https://purl.org/ai4s/ontology/planning/multi-agent> <http://www.w3.org/2002/07/owl#versionInfo> "1.0.0" .
 # 
 # 
 # #################################################################

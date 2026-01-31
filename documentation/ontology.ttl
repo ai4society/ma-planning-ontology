@@ -20,7 +20,8 @@
                                                        <http://purl.org/dc/terms/issued> "2025-07-22"^^xsd:date ;
                                                        <http://purl.org/dc/terms/license> <http://creativecommons.org/licenses/by/4.0/> ;
                                                        <http://purl.org/dc/terms/title> "Multi-Agent Planning Ontology" ;
-                                                       <http://purl.org/vocab/vann/preferredNamespaceUri> "https://purl.org/ai4s/ontology/planning/multi-agent#" .
+                                                       <http://purl.org/vocab/vann/preferredNamespaceUri> "https://purl.org/ai4s/ontology/planning/multi-agent#" ;
+                                                       owl:versionInfo "1.0.0" .
 
 #################################################################
 #    Annotation properties
